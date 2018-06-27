@@ -1,3 +1,57 @@
 <resources>
     <string name="app_name">CSjolup</string>
+
+    <string-array name="major_names">
+        <item>학과를 선택하세요</item>
+        <item>컴퓨터과학과</item>
+    </string-array>
+
+    <string-array name="stu_0">
+        <item>학번을 선택하세요</item>
+    </string-array>
+
+    <string-array name="stu_num">
+        <item>학번을 선택하세요</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+    </string-array>
+
+    <string-array name="jolup1">
+        <item>""</item>
+        <item>사회봉사30시간이상</item>
+        <item>헌혈 총 3회 이상</item>
+        <item>총장인정 1학기이상 교내봉사</item>
+    </string-array>
+
+    <string-array name="jolup2">
+        <item>""</item>
+        <item>해외현장체험 참가</item>
+        <item>global pioneer program 참가</item>
+        <item>해외단기 교환 프로그램</item>
+        <item>해외 인턴십 수료</item>
+        <item>해외 교환학생 수료</item>
+    </string-array>
+
+    <string-array name="jolup3">
+        <item>""</item>
+        <item>1권</item>
+        <item>2권</item>
+        <item>3권</item>
+        <item>4권</item>
+        <item>5권</item>
+        <item>6권</item>
+        <item>7권</item>
+    </string-array>
+
+    <string-array name="jolup4">
+        <item>""</item>
+        <item>GNU인성 이수</item>
+        <item>GNU인성 교육프로그램 이수</item>
+    </string-array>
+
 </resources>
