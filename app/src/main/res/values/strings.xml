@@ -21,7 +21,6 @@
         <item>18</item>
     </string-array>
 
-<<<<<<< Updated upstream
     <string-array name="jolup1">
         <item>""</item>
         <item>사회봉사30시간이상</item>
@@ -55,6 +54,4 @@
         <item>GNU인성 교육프로그램 이수</item>
     </string-array>
 
-=======
->>>>>>> Stashed changes
 </resources>
