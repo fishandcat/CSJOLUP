@@ -7,30 +7,56 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/DrawListView"
+        android:layout_width="150dp"
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/listview"
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:background="#EDEDED" />
+
+    </android.support.v4.widget.DrawerLayout>
+
+    <RelativeLayout
+        android:id="@+id/fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent">
+
+    </RelativeLayout>
+
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <android.support.constraint.ConstraintLayout
-            android:id="@+id/select"
+            android:id="@+id/screenView"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/major"
-                android:layout_width="53dp"
+                android:layout_width="52dp"
                 android:layout_height="40dp"
+                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:text="학과 : "
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.214"
+                app:layout_constraintHorizontal_bias="0.237"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.222" />
+                app:layout_constraintVertical_bias="0.256" />
 
             <TextView
                 android:id="@+id/curriculum"
@@ -49,10 +75,10 @@
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.093"
+                app:layout_constraintHorizontal_bias="0.118"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.336" />
+                app:layout_constraintVertical_bias="0.378" />
 
             <Spinner
                 android:id="@+id/majorspinner"
@@ -114,21 +140,5 @@
         </android.support.constraint.ConstraintLayout>
 
     </FrameLayout>
-
-    <RelativeLayout
-        android:id="@+id/fragment"
-        android:layout_width="match_parent"
-        android:layout_height="470dp"
-        android:layout_marginBottom="4dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent">
-
-    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

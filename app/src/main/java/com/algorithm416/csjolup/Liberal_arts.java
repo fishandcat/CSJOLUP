@@ -3,41 +3,33 @@ package com.algorithm416.csjolup;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link curriculum.OnFragmentInteractionListener} interface
+ * {@link Liberal_arts.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link curriculum#newInstance} factory method to
+ * Use the {@link Liberal_arts#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class curriculum extends Fragment {
+public class Liberal_arts extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private Button Majorbtn;
-    private Button LiberalArtsbtn;
-
     private String mParam1;
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
-    public curriculum() {
+    public Liberal_arts() {
         // Required empty public constructor
     }
 
@@ -47,11 +39,11 @@ public class curriculum extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment curriculum.
+     * @return A new instance of fragment Liberal_arts.
      */
     // TODO: Rename and change types and number of parameters
-    public static curriculum newInstance(String param1, String param2) {
-        curriculum fragment = new curriculum();
+    public static Liberal_arts newInstance(String param1, String param2) {
+        Liberal_arts fragment = new Liberal_arts();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -72,40 +64,7 @@ public class curriculum extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_curriculum, container, false);
-
-
-        Majorbtn = (Button) view.findViewById(R.id.majorButton);
-        LiberalArtsbtn = (Button) view.findViewById(R.id.liberalArtButton);
-        //final ConstraintLayout ChangeView = (ConstraintLayout)getActivity().findViewById(R.id.fragment);
-
-
-
-        /*// 전공 버튼 클릭시 프레그먼트 변경
-        Majorbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ChangeView.setVisibility(View.GONE);
-                FragmentManager fragmentManager = getChildFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment, new Major());
-                fragmentTransaction.commit();
-            }
-        });
-
-        // 교양 버튼 클릭시 프레그먼트 변경
-        LiberalArtsbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ChangeView.setVisibility(View.GONE);
-                FragmentManager fragmentManager = getChildFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment, new Liberal_arts());
-                fragmentTransaction.commit();
-            }
-        });*/
-
-        return view;
+        return inflater.inflate(R.layout.fragment_liberal_arts, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -120,9 +79,9 @@ public class curriculum extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
-        }
-        else {
-            //throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
         }
     }
 
