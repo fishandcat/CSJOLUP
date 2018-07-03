@@ -1,6 +1,7 @@
 package com.algorithm416.csjolup;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.FragmentManager;
@@ -18,8 +19,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.time.Instant;
@@ -27,9 +30,10 @@ import java.time.Instant;
 /*
 *   내일할일
 *
-*   스피너 값 프레그먼트로 전달해서 확인
-*   설정 뷰를 누를시 넘어온 정보 표기
-*   스피너 부분 확인 하기
+*   설정 엑티비티 구성하기 (학점관리 학점 텍스트로 표시, 그래프 표시 설정, 초기화 버튼 구현)
+*   엑션바에 메뉴 토글 구현하기
+*   학점관리 페이지구성
+*   디자인구성하기
 *
 * */
 
@@ -39,35 +43,50 @@ public class MainActivity extends AppCompatActivity {
     private ArrayAdapter<String> adDraList;                             // 드로우 리스트 어뎁터
     private String [] MenuItem = new String[]{"졸업관리", "학점관리"};      // 네비게이션 메뉴 이름
 
-    private ConstraintLayout ChangeView;        // 레이어
+    private ConstraintLayout ScreenView;        // 콘스트레인 레이아웃
     private Spinner MajorSpin;                  // 전공 스피너
     private Spinner CurriculumSpin;             // 교육과정 스피너
     private String SaveMajor = "";              // 선택한 전공 저장
     private String SaveCurriculum = "";         // 선택한 교육과정 저장
-    private boolean checkstate = false;
 
-    private DrawerLayout DrLay;                 // 드로우 레이아웃
+    private Intent settingintent;               // 세팅 엑티비티 인텐트
+
+    private DrawerLayout DrLay;                 // 네비게이션 메인 레이아웃
     private ActionBarDrawerToggle ActBarDraTog; // 엑션바 드로우 토클
-    private ListView listView;                  // 리스트뷰
+    private ListView listView;                  // 리스트뷰 레이아웃
+    private FrameLayout FragmentLayout;         // 프레그먼트 변경 레이아웃
+    private View Heder;
 
     private curriculum currfragment;            // 커리큘럼 프래그먼트
-    private Major majorfragment;                // 전공 프래그먼트
+    private Grades grades;                      // 학점관리 프래그먼트
+
+    private TextView MajorText;
+    private TextView CurriculumText;
+
+    public MainActivity() {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ChangeView = (ConstraintLayout) findViewById(R.id.screenView);
-
         MajorSpin = (Spinner) findViewById(R.id.majorspinner);
         CurriculumSpin = (Spinner) findViewById(R.id.curriculumspinner);
 
         currfragment = curriculum.newInstance(SaveCurriculum,SaveMajor);
-        majorfragment = Major.newInstance("ttt", "no");
+        grades = Grades.newInstance("", "");
 
+        ScreenView = (ConstraintLayout) findViewById(R.id.screenView);
         DrLay = (DrawerLayout) findViewById(R.id.DrawListView);
         listView = (ListView) findViewById(R.id.listview);
+        FragmentLayout = (FrameLayout) findViewById(R.id.Fragment);
+        Heder = getLayoutInflater().inflate(R.layout.listview_header, null, false);
+
+        settingintent = new Intent(MainActivity.this, Setting.class);
+
+        MajorText = (TextView) Heder.findViewById(R.id.majortext);
+        CurriculumText = (TextView) Heder.findViewById(R.id.curriculumtext);
         /*// 프레그먼트 첫 화면 셋팅 (지금 안씀)
         getSupportFragmentManager()
                 .beginTransaction()
@@ -76,24 +95,25 @@ public class MainActivity extends AppCompatActivity {
 
         DrLay.setVisibility(View.GONE);
 
-        // 리스트뷰
+        // 네비게이션 리스트뷰
+        listView.addHeaderView(Heder);
         adDraList = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, MenuItem);
         listView.setAdapter(adDraList);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 switch (position) {
-                    case 0:
-                        ChangeView.setVisibility(View.GONE);
-                        getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.frameLayout, currfragment).commit();
-                        break;
                     case 1:
-                        ChangeView.setVisibility(View.GONE);
+                        Toast.makeText(MainActivity.this, "졸업관리", Toast.LENGTH_SHORT).show();
                         getSupportFragmentManager()
                                 .beginTransaction()
-                                .replace(R.id.frameLayout, majorfragment).commit();
+                                .replace(R.id.Fragment, currfragment).commit();
+                        break;
+                    case 2:
+                        Toast.makeText(MainActivity.this, "학점관리", Toast.LENGTH_SHORT).show();
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.Fragment, grades).commit();
                         break;
                 }
                 DrLay.closeDrawer(listView);
@@ -175,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()){
 
             case R.id.action_setting:
-                Toast.makeText(MainActivity.this, "setting", Toast.LENGTH_SHORT).show();
+                startActivity(settingintent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -187,13 +207,14 @@ public class MainActivity extends AppCompatActivity {
         switch (v.getId()) {
             case R.id.savebtn:
                 if (!SaveMajor.equals("") && !SaveCurriculum.equals("")) {
-                    checkstate = true;
+                    ScreenView.setVisibility(View.GONE);
                     DrLay.setVisibility(View.VISIBLE);
                     Toast.makeText(MainActivity.this, "저장완료!", Toast.LENGTH_SHORT).show();
-                    ChangeView.setVisibility(View.GONE);
+                    MajorText.setText(SaveMajor);
+                    CurriculumText.setText(SaveCurriculum + " 교육과정");
                     getSupportFragmentManager()
                             .beginTransaction()
-                            .replace(R.id.frameLayout, currfragment).commit();
+                            .replace(R.id.Fragment, currfragment).commit();
                 }
                 else if (SaveMajor.equals("")) {
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
