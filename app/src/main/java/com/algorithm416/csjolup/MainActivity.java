@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewParent;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
@@ -55,13 +57,13 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle ActBarDraTog; // 엑션바 드로우 토클
     private ListView listView;                  // 리스트뷰 레이아웃
     private FrameLayout FragmentLayout;         // 프레그먼트 변경 레이아웃
-    private View Heder;
+    private View Heder;                         // 네비게이션 헤더 뷰
 
     private curriculum currfragment;            // 커리큘럼 프래그먼트
     private Grades grades;                      // 학점관리 프래그먼트
 
-    private TextView MajorText;
-    private TextView CurriculumText;
+    private TextView MajorText;                 // 전공 텍스트
+    private TextView CurriculumText;            // 교육과정 텍스트
 
     public MainActivity() {
     }
@@ -271,6 +273,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    
+
 
 }

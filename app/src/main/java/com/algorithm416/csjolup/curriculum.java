@@ -6,7 +6,10 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,16 +33,20 @@ public class curriculum extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private Button Majorbtn;
-    private Button LiberalArtsbtn;
+    private Button Majorbtn;            // 전공 버튼
+    private Button LiberalArtsbtn;      // 교양 버튼
 
     private String mParam1;
     private String mParam2;
 
-    private Major major;
-    private Liberal_arts liberalArts;
+    private Major major;                // 전공 프래그먼트
+    private Liberal_arts liberalArts;   // 교양 프래그먼트
 
-    private RelativeLayout Changefrag;
+    private ViewPager viewPager;
+
+    private PagerAdapter ViewAdapter;
+
+    private RelativeLayout Changefrag;  // 안씀
 
     private OnFragmentInteractionListener mListener;
 
@@ -87,14 +94,28 @@ public class curriculum extends Fragment {
         LiberalArtsbtn = (Button) view.findViewById(R.id.liberalArtButton);
 
         Changefrag = (RelativeLayout) view.findViewById(R.id.fragment);
-        //final ConstraintLayout ChangeView = (ConstraintLayout)getActivity().findViewById(R.id.fragment);
 
+        viewPager = (ViewPager) view.findViewById(R.id.pager);
 
+        viewPager.setAdapter(ViewAdapter);
+        viewPager.setCurrentItem(0);
+
+        viewPager.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                int tag = (int)view.getTag();
+                viewPager.setCurrentItem(tag);
+            }
+        });
 
         // 전공 버튼 클릭시 프레그먼트 변경
         Majorbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                int tag = (int)v.getTag();
+                viewPager.setCurrentItem(tag);
+
                 getActivity()
                         .getSupportFragmentManager()
                         .beginTransaction()
@@ -106,12 +127,19 @@ public class curriculum extends Fragment {
         LiberalArtsbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                int tag = (int)v.getTag();
+                viewPager.setCurrentItem(tag);
+
                 getActivity()
                         .getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fragment, liberalArts).commit();
             }
         });
+
+        Majorbtn.setTag(0);
+        LiberalArtsbtn.setTag(1);
 
         return view;
     }
