@@ -11,17 +11,85 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/button3"
+        <Space
             android:layout_width="match_parent"
-            android:layout_height="288dp"
-            android:text="Button" />
+            android:layout_height="30dp" />
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment" />
+            android:layout_height="100dp"
+            android:orientation="horizontal">
 
+            <TextView
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="사회봉사 :"
+                android:textSize="10pt" />
+
+            <Spinner
+                android:id="@+id/Jolupsp1"
+                android:layout_width="match_parent"
+                android:layout_height="45dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="글로벌 리더쉽 :"
+                android:textSize="10pt" />
+
+            <Spinner
+                android:id="@+id/Jolupsp2"
+                android:layout_width="match_parent"
+                android:layout_height="45dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="독서 :"
+                android:textSize="10pt" />
+
+            <Spinner
+                android:id="@+id/Jolupsp3"
+                android:layout_width="match_parent"
+                android:layout_height="45dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="GNU인성 :"
+                android:textSize="10pt" />
+
+            <Spinner
+                android:id="@+id/Jolupsp4"
+                android:layout_width="match_parent"
+                android:layout_height="45dp" />
+
+        </LinearLayout>
     </LinearLayout>
 
 </FrameLayout>

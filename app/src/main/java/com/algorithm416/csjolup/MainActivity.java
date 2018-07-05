@@ -2,6 +2,7 @@ package com.algorithm416.csjolup;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ScaleDrawable;
 import android.support.constraint.ConstraintLayout;
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
 
         MajorSpin = (Spinner) findViewById(R.id.majorspinner);
@@ -94,11 +96,6 @@ public class MainActivity extends AppCompatActivity {
 
         MajorText = (TextView) Heder.findViewById(R.id.majortext);
         CurriculumText = (TextView) Heder.findViewById(R.id.curriculumtext);
-        /*// 프레그먼트 첫 화면 셋팅 (지금 안씀)
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.frameLayout, currfragment).commit();
-        */
 
         DrLay.setVisibility(View.GONE);
 
@@ -188,15 +185,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-    /*// 액션바 적용안됨!?
-    private void hidenActionBar(){
-        ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null)
-        {
-            actionBar.hide();
-        }
-    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
