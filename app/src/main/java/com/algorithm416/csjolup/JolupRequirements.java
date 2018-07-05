@@ -8,18 +8,17 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Liberal_arts.OnFragmentInteractionListener} interface
+ * {@link JolupRequirements.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link Liberal_arts#newInstance} factory method to
+ * Use the {@link JolupRequirements#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Liberal_arts extends Fragment {
+public class JolupRequirements extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -28,17 +27,12 @@ public class Liberal_arts extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private String teststring;
-
-    private CurriculumDB curriculumDB;
-
-    private TextView testtextview;
 
     private OnFragmentInteractionListener mListener;
 
     private curriculum curriculum;
 
-    public Liberal_arts() {
+    public JolupRequirements() {
         // Required empty public constructor
     }
 
@@ -48,11 +42,11 @@ public class Liberal_arts extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Liberal_arts.
+     * @return A new instance of fragment JolupRequirements.
      */
     // TODO: Rename and change types and number of parameters
-    public static Liberal_arts newInstance(String param1, String param2) {
-        Liberal_arts fragment = new Liberal_arts();
+    public static JolupRequirements newInstance(String param1, String param2) {
+        JolupRequirements fragment = new JolupRequirements();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -67,16 +61,14 @@ public class Liberal_arts extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-        curriculum = curriculum.newInstance(mParam1,mParam2);
+        curriculum = curriculum.newInstance(mParam1, mParam2);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
-        View view = inflater.inflate(R.layout.fragment_liberal_arts, container, false);
+        View view = inflater.inflate(R.layout.fragment_jolup_requirements, container, false);
 
         // 프래그먼트 뒤로가기 이벤트 처리
         view.setFocusableInTouchMode(true);
@@ -95,12 +87,6 @@ public class Liberal_arts extends Fragment {
                 }
             }
         });
-
-        testtextview = (TextView) view.findViewById(R.id.testtext);
-
-        curriculumDB = new CurriculumDB(getContext());
-
-        testtextview.setText(curriculumDB.getMajor(mParam2)[3][2]); // DB 확인용
 
         return view;
     }

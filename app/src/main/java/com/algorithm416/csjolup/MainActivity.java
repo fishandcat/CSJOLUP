@@ -3,6 +3,7 @@ package com.algorithm416.csjolup;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ScaleDrawable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -37,6 +38,8 @@ import java.time.Instant;
 *   학점관리 페이지구성
 *   디자인구성하기
 *
+*   졸업관리뷰 프레임 레이아웃 수정하기
+*
 * */
 
 public class MainActivity extends AppCompatActivity {
@@ -45,11 +48,14 @@ public class MainActivity extends AppCompatActivity {
     private ArrayAdapter<String> adDraList;                             // 드로우 리스트 어뎁터
     private String [] MenuItem = new String[]{"졸업관리", "학점관리"};      // 네비게이션 메뉴 이름
 
-    private ConstraintLayout ScreenView;        // 콘스트레인 레이아웃
+    private ConstraintLayout ScreenView;        // 컨스트레인 레이아웃
     private Spinner MajorSpin;                  // 전공 스피너
     private Spinner CurriculumSpin;             // 교육과정 스피너
     private String SaveMajor = "";              // 선택한 전공 저장
     private String SaveCurriculum = "";         // 선택한 교육과정 저장
+
+    private boolean spinerCheck1 = false;
+    private boolean spinerCheck2 = false;
 
     private Intent settingintent;               // 세팅 엑티비티 인텐트
 
@@ -67,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
 
     public MainActivity() {
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,8 +81,8 @@ public class MainActivity extends AppCompatActivity {
         MajorSpin = (Spinner) findViewById(R.id.majorspinner);
         CurriculumSpin = (Spinner) findViewById(R.id.curriculumspinner);
 
-        currfragment = curriculum.newInstance(SaveCurriculum,SaveMajor);
-        grades = Grades.newInstance("", "");
+        currfragment = curriculum.newInstance(SaveMajor,SaveCurriculum);
+        grades = Grades.newInstance(SaveMajor, SaveCurriculum);
 
         ScreenView = (ConstraintLayout) findViewById(R.id.screenView);
         DrLay = (DrawerLayout) findViewById(R.id.DrawListView);
@@ -107,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
                 switch (position) {
                     case 1:
                         Toast.makeText(MainActivity.this, "졸업관리", Toast.LENGTH_SHORT).show();
+                        currfragment.CurriView.setVisibility(View.VISIBLE);
+                        currfragment.Changefrag.setVisibility(View.GONE);
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.Fragment, currfragment).commit();
@@ -129,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
         */
 
         // 전공 스피너
-        adMajorSpin = ArrayAdapter.createFromResource(this, R.array.major_names, android.R.layout.simple_spinner_dropdown_item);
+        adMajorSpin = ArrayAdapter.createFromResource(MainActivity.this, R.array.major_names, android.R.layout.simple_spinner_dropdown_item);
         adMajorSpin.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         MajorSpin.setAdapter(adMajorSpin);
 
@@ -141,37 +148,43 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
+                    spinerCheck1 = false;
                     SaveMajor = "";
                     SaveCurriculum = "";
                 }
-                else{
+                else {
                     SaveMajor = adMajorSpin.getItem(position).toString();
-
-                    CurriculumSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                            if(position == 0) {
-                                SaveCurriculum = "";
-                            }
-                            else {
-                                SaveCurriculum = adCurriculumSpin.getItem(position).toString();
-                            }
-                        }
-
-                        @Override
-                        public void onNothingSelected(AdapterView<?> parent) {
-                            CurriculumSpin.setSelection(0);
-                            SaveCurriculum = "";
-                        }
-                    });
+                    spinerCheck1 = true;
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+                CurriculumSpin.setSelection(0);
                 SaveMajor = "";
                 SaveCurriculum = "";
+                spinerCheck1 = false;
+            }
+        });
+
+        CurriculumSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position == 0) {
+                    spinerCheck2 = false;
+                    SaveCurriculum = "";
+                }
+                else {
+                    SaveCurriculum = adCurriculumSpin.getItem(position).toString();
+                    spinerCheck2 = true;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                CurriculumSpin.setSelection(0);
+                SaveCurriculum = "";
+                spinerCheck2 = false;
             }
         });
     }
@@ -208,17 +221,18 @@ public class MainActivity extends AppCompatActivity {
 
         switch (v.getId()) {
             case R.id.savebtn:
-                if (!SaveMajor.equals("") && !SaveCurriculum.equals("")) {
+                if (spinerCheck1 && spinerCheck2) {
                     ScreenView.setVisibility(View.GONE);
                     DrLay.setVisibility(View.VISIBLE);
                     Toast.makeText(MainActivity.this, "저장완료!", Toast.LENGTH_SHORT).show();
                     MajorText.setText(SaveMajor);
                     CurriculumText.setText(SaveCurriculum + " 교육과정");
+                    currfragment = curriculum.newInstance(SaveMajor,SaveCurriculum);
                     getSupportFragmentManager()
                             .beginTransaction()
                             .replace(R.id.Fragment, currfragment).commit();
                 }
-                else if (SaveMajor.equals("")) {
+                else if (!spinerCheck1) {
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
 
                     // 제목셋팅
@@ -243,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
                     // 다이얼로그 보여주기
                     alertDialog.show();
                 }
-                else if (SaveCurriculum.equals("")) {
+                else if (!spinerCheck2) {
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
 
                     // 제목셋팅

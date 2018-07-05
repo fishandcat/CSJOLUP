@@ -1,9 +1,12 @@
 package com.algorithm416.csjolup;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +31,8 @@ public class Major extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private curriculum curriculum;
 
     public Major() {
         // Required empty public constructor
@@ -58,6 +63,7 @@ public class Major extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        curriculum = curriculum.newInstance(mParam1,mParam2);
     }
 
     @Override
@@ -65,7 +71,28 @@ public class Major extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        return inflater.inflate(R.layout.fragment_major, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_major, container, false);
+
+        // 프래그먼트 뒤로가기 이벤트 처리
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if( keyCode == KeyEvent.KEYCODE_BACK ) {
+                    getActivity()
+                            .getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.Fragment, curriculum).commit();
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

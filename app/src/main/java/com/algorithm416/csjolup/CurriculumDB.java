@@ -27,11 +27,7 @@ public class CurriculumDB extends SQLiteOpenHelper {
     public CurriculumDB(Context context) {
         super(context, DB_NAME, null, 1);
         this.mycontext = context;
-        DB_PATH = this.mycontext.getFilesDir().getPath() + mycontext.getApplicationContext().getPackageName()+"/databases/";
-    }
-
-    @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        DB_PATH = "/data/data/"+this.mycontext.getPackageName()+"/databases/";
         boolean dbexist = checkDatabase();
         if (dbexist) {
             //System.out.println("Database exists");
@@ -45,6 +41,11 @@ public class CurriculumDB extends SQLiteOpenHelper {
                 Log.e("CurriculumDB", e.getMessage());
             }
         }
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+
     }
 
     @Override
@@ -136,7 +137,7 @@ public class CurriculumDB extends SQLiteOpenHelper {
 
     // 각 연도별 학년별 전공 필수 / 선택 과목 반환
     public String[][] getMajor(String year) {
-        if (myDataBase.isOpen())
+        if (myDataBase == null)
             openDatabase();
 
         Cursor result = null;

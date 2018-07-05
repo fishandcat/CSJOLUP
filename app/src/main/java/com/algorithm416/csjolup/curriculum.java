@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -35,18 +36,21 @@ public class curriculum extends Fragment {
     // TODO: Rename and change types of parameters
     private Button Majorbtn;            // 전공 버튼
     private Button LiberalArtsbtn;      // 교양 버튼
+    private Button Jolupbtn;
 
     private String mParam1;
     private String mParam2;
 
     private Major major;                // 전공 프래그먼트
     private Liberal_arts liberalArts;   // 교양 프래그먼트
+    private JolupRequirements jolupRequirements;    // 졸업인증 프래그먼트
 
     private ViewPager viewPager;
 
     private PagerAdapter ViewAdapter;
 
-    private RelativeLayout Changefrag;  // 안씀
+    public static RelativeLayout Changefrag;  // 프래그먼트 변환용 레이아웃
+    public static FrameLayout CurriView;      // 졸업관리 프래그먼트 UI 레이아웃
 
     private OnFragmentInteractionListener mListener;
 
@@ -79,8 +83,9 @@ public class curriculum extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        major = Major.newInstance("", "");
-        liberalArts = Liberal_arts.newInstance("","");
+        major = Major.newInstance(mParam1, mParam2);
+        liberalArts = Liberal_arts.newInstance(mParam1, mParam2);
+        jolupRequirements = JolupRequirements.newInstance(mParam1,mParam2);
     }
 
     @Override
@@ -92,8 +97,10 @@ public class curriculum extends Fragment {
 
         Majorbtn = (Button) view.findViewById(R.id.majorButton);
         LiberalArtsbtn = (Button) view.findViewById(R.id.liberalArtButton);
+        Jolupbtn = (Button) view.findViewById(R.id.jolupButton);
 
         Changefrag = (RelativeLayout) view.findViewById(R.id.fragment);
+        CurriView = (FrameLayout) view.findViewById(R.id.CurriView);
 
         viewPager = (ViewPager) view.findViewById(R.id.pager);
 
@@ -115,7 +122,8 @@ public class curriculum extends Fragment {
 
                 int tag = (int)v.getTag();
                 viewPager.setCurrentItem(tag);
-
+                CurriView.setVisibility(View.GONE);
+                Changefrag.setVisibility(View.VISIBLE);
                 getActivity()
                         .getSupportFragmentManager()
                         .beginTransaction()
@@ -130,7 +138,8 @@ public class curriculum extends Fragment {
 
                 int tag = (int)v.getTag();
                 viewPager.setCurrentItem(tag);
-
+                CurriView.setVisibility(View.GONE);
+                Changefrag.setVisibility(View.VISIBLE);
                 getActivity()
                         .getSupportFragmentManager()
                         .beginTransaction()
@@ -138,8 +147,24 @@ public class curriculum extends Fragment {
             }
         });
 
+        Jolupbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                int tag = (int)v.getTag();
+                viewPager.setCurrentItem(tag);
+                CurriView.setVisibility(View.GONE);
+                Changefrag.setVisibility(View.VISIBLE);
+                getActivity()
+                        .getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment, jolupRequirements).commit();
+            }
+        });
+
         Majorbtn.setTag(0);
         LiberalArtsbtn.setTag(1);
+        Jolupbtn.setTag(2);
 
         return view;
     }

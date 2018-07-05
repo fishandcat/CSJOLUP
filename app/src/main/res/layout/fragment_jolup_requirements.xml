@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Major">
+    tools:context=".JolupRequirements">
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
@@ -12,9 +12,9 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/button3"
             android:layout_width="match_parent"
-            android:layout_height="281dp"
+            android:layout_height="288dp"
             android:text="Button" />
 
         <TextView

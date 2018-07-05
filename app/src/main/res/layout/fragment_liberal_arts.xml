@@ -6,15 +6,23 @@
     tools:context=".Liberal_arts">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="285dp"
-        android:layout_height="313dp"
-        android:text="Button" />
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="313dp"
+            android:text="Button" />
+
+        <TextView
+            android:id="@+id/testtext"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/hello_blank_fragment" />
+
+    </LinearLayout>
 
 </FrameLayout>
