@@ -76,11 +76,6 @@
 
                 </android.support.v4.view.ViewPager>
 
-                <Button
-                    android:id="@+id/button4"
-                    android:layout_width="match_parent"
-                    android:layout_height="445dp"
-                    android:text="Button" />
             </FrameLayout>
 
             <RelativeLayout
