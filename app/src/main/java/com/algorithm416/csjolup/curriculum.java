@@ -10,13 +10,18 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import static android.view.View.GONE;
 
 
 /**
@@ -41,16 +46,17 @@ public class curriculum extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private InputMethodManager inputMethodManager;
+
     private Major major;                // 전공 프래그먼트
     private Liberal_arts liberalArts;   // 교양 프래그먼트
     private JolupRequirements jolupRequirements;    // 졸업인증 프래그먼트
 
     private ViewPager viewPager;
+    private SectionsPagerAdapter pagerAdapter;
 
-    private PagerAdapter ViewAdapter;
-
-    public static RelativeLayout Changefrag;  // 프래그먼트 변환용 레이아웃
-    public static FrameLayout CurriView;      // 졸업관리 프래그먼트 UI 레이아웃
+    public static FrameLayout Changefrag;  // 프래그먼트 변환용 레이아웃
+    public static RelativeLayout CurriView;      // 졸업관리 프래그먼트 UI 레이아웃
 
     private OnFragmentInteractionListener mListener;
 
@@ -83,9 +89,17 @@ public class curriculum extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        pagerAdapter = new SectionsPagerAdapter(getFragmentManager());
+
         major = Major.newInstance(mParam1, mParam2);
         liberalArts = Liberal_arts.newInstance(mParam1, mParam2);
         jolupRequirements = JolupRequirements.newInstance(mParam1,mParam2);
+
+        pagerAdapter.insertItem(major);
+        pagerAdapter.insertItem(liberalArts);
+        pagerAdapter.insertItem(jolupRequirements);
+
+        inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     @Override
@@ -94,77 +108,72 @@ public class curriculum extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_curriculum, container, false);
 
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if( keyCode == KeyEvent.KEYCODE_BACK ) {
+                    Changefrag.setVisibility(View.GONE);
+                    CurriView.setVisibility(View.VISIBLE);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
 
         Majorbtn = (Button) view.findViewById(R.id.majorButton);
         LiberalArtsbtn = (Button) view.findViewById(R.id.liberalArtButton);
         Jolupbtn = (Button) view.findViewById(R.id.jolupButton);
 
-        Changefrag = (RelativeLayout) view.findViewById(R.id.fragment);
-        CurriView = (FrameLayout) view.findViewById(R.id.CurriView);
+        Changefrag = (FrameLayout) view.findViewById(R.id.CurriView);
+        CurriView = (RelativeLayout) view.findViewById(R.id.fragment);
+
+        Changefrag.setVisibility(View.GONE);
+        CurriView.setVisibility(View.VISIBLE);
 
         viewPager = (ViewPager) view.findViewById(R.id.pager);
 
-        viewPager.setAdapter(ViewAdapter);
+        viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(0);
-
-        viewPager.setOnClickListener(new View.OnClickListener(){
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onClick(View view) {
-                int tag = (int)view.getTag();
-                viewPager.setCurrentItem(tag);
+            public void onPageScrolled(int i, float v, int i1) {
+                inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), 0);
             }
-        });
 
-        // 전공 버튼 클릭시 프레그먼트 변경
-        Majorbtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onPageSelected(int i) {
 
-                int tag = (int)v.getTag();
-                viewPager.setCurrentItem(tag);
-                CurriView.setVisibility(View.GONE);
-                Changefrag.setVisibility(View.VISIBLE);
-                getActivity()
-                        .getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragment, major).commit();
             }
-        });
 
-        // 교양 버튼 클릭시 프레그먼트 변경
-        LiberalArtsbtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onPageScrollStateChanged(int i) {
 
-                int tag = (int)v.getTag();
-                viewPager.setCurrentItem(tag);
-                CurriView.setVisibility(View.GONE);
-                Changefrag.setVisibility(View.VISIBLE);
-                getActivity()
-                        .getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragment, liberalArts).commit();
-            }
-        });
-
-        Jolupbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                int tag = (int)v.getTag();
-                viewPager.setCurrentItem(tag);
-                CurriView.setVisibility(View.GONE);
-                Changefrag.setVisibility(View.VISIBLE);
-                getActivity()
-                        .getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragment, jolupRequirements).commit();
             }
         });
 
         Majorbtn.setTag(0);
         LiberalArtsbtn.setTag(1);
         Jolupbtn.setTag(2);
+
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int tag = (int)view.getTag();
+                viewPager.setCurrentItem(tag, true);
+                if (CurriView.getVisibility() == View.VISIBLE){
+                    Changefrag.setVisibility(View.VISIBLE);
+                    CurriView.setVisibility(View.GONE);
+                }
+            }
+        };
+
+        //버튼 클릭시 프레그먼트 변경
+        Majorbtn.setOnClickListener(onClickListener);
+        LiberalArtsbtn.setOnClickListener(onClickListener);
+        Jolupbtn.setOnClickListener(onClickListener);
 
         return view;
     }

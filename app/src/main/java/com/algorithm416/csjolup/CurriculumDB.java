@@ -27,7 +27,8 @@ public class CurriculumDB extends SQLiteOpenHelper {
     public CurriculumDB(Context context) {
         super(context, DB_NAME, null, 1);
         this.mycontext = context;
-        DB_PATH = "/data/data/"+this.mycontext.getPackageName()+"/databases/";
+        DB_PATH = "/data/data/"+mycontext.getPackageName()+"/databases/";
+
         boolean dbexist = checkDatabase();
         if (dbexist) {
             //System.out.println("Database exists");
@@ -115,6 +116,7 @@ public class CurriculumDB extends SQLiteOpenHelper {
         super.close();
     }
 
+    // String[][]로 테이블을 만들어 반환해준다.
     private String[][] getTable(Cursor result) {
         if (result == null || !result.moveToFirst())
             return null;
@@ -174,7 +176,7 @@ public class CurriculumDB extends SQLiteOpenHelper {
 
     // 연도별 공학인증.
     public String[][] getKCC(String year) {
-        if (myDataBase.isOpen())
+        if (myDataBase == null)
             openDatabase();
 
         Cursor result = null;
@@ -190,7 +192,7 @@ public class CurriculumDB extends SQLiteOpenHelper {
                 result = myDataBase.rawQuery("SELECT * FROM kcc2010_" + year + " JOIN kcc_lectures USING (lecture_num) ORDER BY type ASC", null);
                 break;
             case "2015":
-                result = myDataBase.rawQuery("SELECT * FROM kcc" + year + " JOIN kcc_lectures USING (lecture_num) ORDER BY type ASC", null);
+                result = myDataBase.rawQuery("SELECT * FROM kcc2015 JOIN kcc_lectures USING (lecture_num) ORDER BY type ASC", null);
                 break;
         }
 
@@ -200,13 +202,21 @@ public class CurriculumDB extends SQLiteOpenHelper {
         return table;
     }
 
-    public String[][] SearchLecture(String lecture_num, int nListCount, int lectrueType) {
-        if (myDataBase.isOpen())
+    // 학수번호 혹은 강의 명을 이용한 강의 검색기능
+    // 학수번호 혹은 강의 명, 표시할 리스트 수, 전공/교양
+    public String[][] SearchLecture(String lecture, int nListCount, int lectrueType) {
+        if (myDataBase == null)
             openDatabase();
 
         Cursor result = lectrueType != MAJOR ?
-                myDataBase.rawQuery("SELECT * FROM liberal_arts WHERE lecture_num>='" + lecture_num + "' LIMIT " + nListCount, null) :
-                myDataBase.rawQuery("SELECT * FROM lecture_cs WHERE lecture_num>='" + lecture_num + "' LIMIT " + nListCount, null);
+                myDataBase.rawQuery("SELECT * FROM liberal_arts WHERE lecture_num>='" + lecture + "' ORDER BY lecture_num ASC LIMIT " + nListCount, null) :
+                myDataBase.rawQuery("SELECT * FROM lecture_cs WHERE lecture_num>='" + lecture + "' ORDER BY lecture_num ASC LIMIT " + nListCount, null);
+
+        if (result == null || !result.moveToFirst()) {
+            result = lectrueType != MAJOR ?
+                    myDataBase.rawQuery("SELECT * FROM liberal_arts WHERE lecture_name>='" + lecture + "' ORDER BY lecture_name ASC LIMIT " + nListCount, null) :
+                    myDataBase.rawQuery("SELECT * FROM lecture_cs WHERE lecture_name>='" + lecture + "' ORDER BY lecture_name ASC LIMIT " + nListCount, null);
+        }
 
         String[][] table = getTable(result);
 
@@ -214,8 +224,13 @@ public class CurriculumDB extends SQLiteOpenHelper {
         return table;
     }
 
+    /* 연도별 최소이수학점 반환
+     *  16년도 이상과 15년도 이하는 각각 다른 과정으로 반환
+     *  15년도 이하는 KCC과정을 만족해야 하며 그에 맞는 과목으로 반환됨
+     *  16년도 이상 과정은 일반 과정을 따라가며 각기 다른 강의 타입으로 10학점만 넘기면 됨
+     */
     public String[][] GetMinCredits(String year) {
-        if (myDataBase.isOpen())
+        if (myDataBase == null)
             openDatabase();
 
         Cursor result = null;
@@ -239,4 +254,32 @@ public class CurriculumDB extends SQLiteOpenHelper {
         close();
         return table;
     }
+
+    // 교직과정별 과목 반환 이론, 실습, 소양 순서로 반환됨
+    public String[][] getTeachingCourse() {
+        return getTeachingCourse(false);
+    }
+
+    /* 교직과정 과목 혹은 최소이수 학점 반환.
+     *  isMinCredits 가 true 면 최소이수학점 false 면 교직과정 과목 반환
+     *  교직과정 최소이수학점 반환
+     *  theory        = 이론
+     *  refinement    = 소양
+     *  practice      = 실습
+     */
+    public String[][] getTeachingCourse(boolean isMinCredits) {
+        if (myDataBase == null)
+            openDatabase();
+
+        Cursor result = isMinCredits ?
+                myDataBase.rawQuery("SELECT * FROM teaching_course JOIN liberal_arts USING (lecture_num) ORDER BY type DESC", null) :
+                myDataBase.rawQuery("SELECT * FROM teaching_course_credit", null);
+
+        String[][] table = getTable(result);
+
+        close();
+        return table;
+    }
 }
+
+// TODO: 전공 과목 v, 강의검색 v, 교직과목 v, KCC v, 최소이수학점 v, 교양과목 => 프래그먼트에서 처리?

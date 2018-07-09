@@ -1,13 +1,18 @@
 package com.algorithm416.csjolup;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.renderscript.ScriptGroup;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 
@@ -68,39 +73,15 @@ public class Liberal_arts extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        curriculum = curriculum.newInstance(mParam1,mParam2);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         View view = inflater.inflate(R.layout.fragment_liberal_arts, container, false);
 
-        // 프래그먼트 뒤로가기 이벤트 처리
-        view.setFocusableInTouchMode(true);
-        view.requestFocus();
-        view.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if( keyCode == KeyEvent.KEYCODE_BACK ) {
-                    getActivity()
-                            .getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.Fragment, curriculum).commit();
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        });
-
-        testtextview = (TextView) view.findViewById(R.id.testtext);
-
-        curriculumDB = new CurriculumDB(getContext());
-
-        testtextview.setText(curriculumDB.getMajor(mParam2)[3][2]); // DB 확인용
+        //curriculumDB = new CurriculumDB(getContext());
 
         return view;
     }
@@ -142,4 +123,5 @@ public class Liberal_arts extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
 }

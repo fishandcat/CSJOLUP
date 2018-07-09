@@ -149,24 +149,6 @@ public class JolupRequirements extends Fragment {
             }
         });
 
-        // 프래그먼트 뒤로가기 이벤트 처리
-        view.setFocusableInTouchMode(true);
-        view.requestFocus();
-        view.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if( keyCode == KeyEvent.KEYCODE_BACK ) {
-                    getActivity()
-                            .getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.Fragment, curriculum).commit();
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        });
-
         return view;
     }
 
