@@ -1,5 +1,6 @@
 package com.algorithm416.csjolup;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -21,6 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewParent;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
@@ -32,7 +34,7 @@ import android.widget.Toast;
 import java.time.Instant;
 
 /*
-*   내일할일
+*   TODO: 내일할일
 *
 *   설정 엑티비티 구성하기 (학점관리 학점 텍스트로 표시, 그래프 표시 설정, 초기화 버튼 구현)
 *   엑션바에 메뉴 토글 구현하기
@@ -274,7 +276,5 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-
-
 
 }

@@ -141,6 +141,8 @@ public class CurriculumDB extends SQLiteOpenHelper {
     public String[][] getMajor(String year) {
         if (myDataBase == null)
             openDatabase();
+        else if (!myDataBase.isOpen())
+            openDatabase();
 
         Cursor result = null;
 
@@ -178,6 +180,8 @@ public class CurriculumDB extends SQLiteOpenHelper {
     public String[][] getKCC(String year) {
         if (myDataBase == null)
             openDatabase();
+        else if (!myDataBase.isOpen())
+            openDatabase();
 
         Cursor result = null;
 
@@ -207,6 +211,8 @@ public class CurriculumDB extends SQLiteOpenHelper {
     public String[][] SearchLecture(String lecture, int nListCount, int lectrueType) {
         if (myDataBase == null)
             openDatabase();
+        else if (!myDataBase.isOpen())
+            openDatabase();
 
         Cursor result = lectrueType != MAJOR ?
                 myDataBase.rawQuery("SELECT * FROM liberal_arts WHERE lecture_num>='" + lecture + "' ORDER BY lecture_num ASC LIMIT " + nListCount, null) :
@@ -231,6 +237,8 @@ public class CurriculumDB extends SQLiteOpenHelper {
      */
     public String[][] GetMinCredits(String year) {
         if (myDataBase == null)
+            openDatabase();
+        else if (!myDataBase.isOpen())
             openDatabase();
 
         Cursor result = null;
@@ -269,6 +277,8 @@ public class CurriculumDB extends SQLiteOpenHelper {
      */
     public String[][] getTeachingCourse(boolean isMinCredits) {
         if (myDataBase == null)
+            openDatabase();
+        else if (!myDataBase.isOpen())
             openDatabase();
 
         Cursor result = isMinCredits ?

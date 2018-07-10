@@ -2,6 +2,7 @@ package com.algorithm416.csjolup;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import java.text.NumberFormat;
+import java.util.ArrayList;
 
 
 /**
@@ -33,7 +43,13 @@ public class Major extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private curriculum curriculum;
+    private ListView listView;
+    private LectureAdapter lectureAdapter;
+    private static ArrayList<Lecture> list = new ArrayList<>();
+    private ArrayAdapter<CharSequence> adapterCurriculum;
+    private Spinner curriculum_cs;
+    static boolean bReload = false;
+    private CurriculumDB db;
 
     public Major() {
         // Required empty public constructor
@@ -64,7 +80,7 @@ public class Major extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
+        db = new CurriculumDB(getContext());
     }
 
     @Override
@@ -72,6 +88,60 @@ public class Major extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_major, container, false);
+
+        curriculum_cs = (Spinner) view.findViewById(R.id.curriculum_cs);
+        adapterCurriculum = ArrayAdapter.createFromResource(getContext(), R.array.stu_num, R.layout.support_simple_spinner_dropdown_item);
+        curriculum_cs.setAdapter(adapterCurriculum);
+        curriculum_cs.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (view == null) {
+                    bReload = true;
+                    return;
+                }
+                if (!bReload) {
+                    // 새로 불러올때 체크한 부분 제외 삭제함
+                    if (list.size() > 0) {
+                        for (int n = 0; n < list.size(); n++) {
+                            if (list.get(n).isLecture()) {
+                                if (!list.get(n).getItemCheck()) {
+                                    list.remove(n--);
+                                }
+                            } else {
+                                list.remove(n--);
+                            }
+                        }
+                    }
+
+                    if (i == 0) {
+                        i = adapterCurriculum.getPosition(mParam2);
+                        curriculum_cs.setSelection(i);
+                    }
+
+                    ConnectDB(adapterCurriculum.getItem(i).toString());
+                }
+                bReload = false;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                curriculum_cs.setSelection(adapterCurriculum.getPosition(mParam2));
+            }
+        });
+
+        curriculum_cs.setSelection(adapterCurriculum.getPosition(mParam2));
+
+        listView = (ListView) view.findViewById(R.id.major_list);
+        lectureAdapter = new LectureAdapter(getContext(), R.layout.listview_lecture, list);
+        listView.requestFocus();
+        listView.setAdapter(lectureAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                list.get(i).setItemCheck(!list.get(i).getItemCheck());
+                lectureAdapter.notifyDataSetChanged();
+            }
+        });
 
         return view;
     }
@@ -112,5 +182,70 @@ public class Major extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    // DB에서 자료를 갖고와 리스트에 등록한 뒤 어댑터를 갱신한다.
+    private void ConnectDB(String year){
+        String[][] table = db.getMajor(year);
+        int grade = 0, type = 0, num = 0, name = 0, credit = 0, exist = 0;
+
+        int grade_count = 0;
+
+        for (int i = 0; i < table.length; i++) {
+            switch(table[i][0]){
+                case "lecture_type":
+                    type = i;
+                    break;
+                case "lecture_num":
+                    num = i;
+                    break;
+                case "lecture_name":
+                    name = i;
+                    break;
+                case "credit":
+                    credit = i;
+                    break;
+                case "grade":
+                    grade = i;
+                    break;
+                case "is_exist":
+                    exist = i;
+            }
+        }
+
+        for (int i = 1; i < table[0].length - 1; i++) {
+            if (grade_count != Integer.parseInt(table[grade][i])) {
+                grade_count = Integer.parseInt(table[grade][i]);
+                int temp = grade_count % 10;
+                String str = String.valueOf(grade_count / 10) + "학년 " + (temp % 2 != 0 ? String.valueOf(temp / 3 + 1) + "학기" : (temp / 2 == 1 ? "하계" : "동계"));
+                list.add(new Lecture(str));
+            }
+
+            // 본 함수가 다시 불러질 때 체크되어 있는 항목이 이미 존재하고 있으므로
+            // 그 부분을 확인하여 리스트뷰에 등록하지 않는다.
+            boolean bReload = false;
+            for (int j = 0; j < list.size(); j++){
+                if (list.get(j).isLecture()) {
+                    if (list.get(j).getLectureNum().equals(table[num][i]) && list.get(j).getGrade().equals(table[grade][i])) {
+                        bReload = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!bReload) {
+                if (table[exist][i].equals("N"))
+                    list.add(new Lecture(table[grade][i], "사라짐", table[num][i], table[name][i], table[credit][i]));
+                else
+                    list.add(new Lecture(table[grade][i], table[type][i], table[num][i], table[name][i], table[credit][i]));
+            }
+
+        }
+        lectureAdapter.notifyDataSetChanged();
+        Toast.makeText(getContext(), "DB 접속", Toast.LENGTH_LONG).show();
+    }
+
+    public static ArrayList<Lecture> getList() {
+        return list;
     }
 }

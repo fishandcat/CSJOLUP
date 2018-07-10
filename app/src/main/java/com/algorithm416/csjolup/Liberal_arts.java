@@ -33,15 +33,10 @@ public class Liberal_arts extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private String teststring;
 
     private CurriculumDB curriculumDB;
 
-    private TextView testtextview;
-
     private OnFragmentInteractionListener mListener;
-
-    private curriculum curriculum;
 
     public Liberal_arts() {
         // Required empty public constructor

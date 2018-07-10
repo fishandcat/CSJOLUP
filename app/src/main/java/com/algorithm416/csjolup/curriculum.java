@@ -99,6 +99,7 @@ public class curriculum extends Fragment {
         pagerAdapter.insertItem(liberalArts);
         pagerAdapter.insertItem(jolupRequirements);
 
+        // 키보드 숨기기 위한 관리변수
         inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
@@ -111,11 +112,19 @@ public class curriculum extends Fragment {
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener(new View.OnKeyListener() {
+            // 뒤로가기 버튼 기능
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if( keyCode == KeyEvent.KEYCODE_BACK ) {
-                    Changefrag.setVisibility(View.GONE);
-                    CurriView.setVisibility(View.VISIBLE);
+                if(event.getAction() == KeyEvent.ACTION_UP) {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        if (CurriView.getVisibility() == View.VISIBLE) {
+                            getActivity().onBackPressed();
+                            return false;
+                        } else {
+                            Changefrag.setVisibility(View.GONE);
+                            CurriView.setVisibility(View.VISIBLE);
+                        }
+                    }
                     return true;
                 } else {
                     return false;

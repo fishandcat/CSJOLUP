@@ -8,6 +8,7 @@
     tools:context=".Liberal_arts">
 
     <!-- TODO: Update blank fragment layout -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -33,11 +34,14 @@
                 android:layout_weight="1"
                 android:inputType="text"
                 android:singleLine="true" />
+
         </LinearLayout>
 
         <ListView
+            android:id="@+id/liberal_arts_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
     </LinearLayout>
 
