@@ -3,6 +3,7 @@ package com.algorithm416.csjolup;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ScaleDrawable;
@@ -68,6 +69,9 @@ public class MainActivity extends AppCompatActivity {
     private FrameLayout FragmentLayout;         // 프레그먼트 변경 레이아웃
     private View Heder;                         // 네비게이션 헤더 뷰
 
+    private SharedPreferences sp;
+    private SharedPreferences.Editor editor;
+
     private curriculum currfragment;            // 커리큘럼 프래그먼트
     private Grades grades;                      // 학점관리 프래그먼트
 
@@ -85,9 +89,6 @@ public class MainActivity extends AppCompatActivity {
         MajorSpin = (Spinner) findViewById(R.id.majorspinner);
         CurriculumSpin = (Spinner) findViewById(R.id.curriculumspinner);
 
-        currfragment = curriculum.newInstance(SaveMajor,SaveCurriculum);
-        grades = Grades.newInstance(SaveMajor, SaveCurriculum);
-
         ScreenView = (ConstraintLayout) findViewById(R.id.screenView);
         DrLay = (DrawerLayout) findViewById(R.id.DrawListView);
         listView = (ListView) findViewById(R.id.listview);
@@ -98,6 +99,10 @@ public class MainActivity extends AppCompatActivity {
 
         MajorText = (TextView) Heder.findViewById(R.id.majortext);
         CurriculumText = (TextView) Heder.findViewById(R.id.curriculumtext);
+
+        sp = getSharedPreferences("savefile", MODE_PRIVATE);
+        editor = sp.edit();
+
 
         DrLay.setVisibility(View.GONE);
 
@@ -218,6 +223,7 @@ public class MainActivity extends AppCompatActivity {
                     MajorText.setText(SaveMajor);
                     CurriculumText.setText(SaveCurriculum + " 교육과정");
                     currfragment = curriculum.newInstance(SaveMajor,SaveCurriculum);
+                    grades = Grades.newInstance(SaveMajor,SaveCurriculum);
                     getSupportFragmentManager()
                             .beginTransaction()
                             .replace(R.id.Fragment, currfragment).commit();

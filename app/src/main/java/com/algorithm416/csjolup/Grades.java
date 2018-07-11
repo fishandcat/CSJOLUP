@@ -7,6 +7,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 
 /**
@@ -29,8 +33,30 @@ public class Grades extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    private String 전필최소;
+    private String 전선최소;
+
+    private int ListSize;
+    private int 전필 = 0;
+    private int 전선 = 0;
+    private int 교직 = 0;
+
+    private TextView 전필텍스트;
+    private TextView 전선텍스트;
+
+    private Lecture lecture;
+    private Major major;
+
+    private ArrayList<Lecture> ArList;
+
+    private CurriculumDB db;
+
     public Grades() {
         // Required empty public constructor
+    }
+
+    public Lecture getItem(int position){
+        return ArList.get(position);
     }
 
     /**
@@ -58,13 +84,30 @@ public class Grades extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        db  = new CurriculumDB(getContext());
+
+        ConnectDB(mParam2);
+
+        Majorpointsum();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_grades, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_grades, container, false);
+
+        전필텍스트 = (TextView) view.findViewById(R.id.전필텍스트);
+        전선텍스트 = (TextView) view.findViewById(R.id.전선텍스트);
+
+        전필텍스트.setText(""+ 전필 + " / " + 전필최소);
+        전필 = 0;
+
+        전선텍스트.setText(""+ 전선 + " / " + 전선최소);
+        전선 = 0;
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -103,5 +146,35 @@ public class Grades extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void Majorpointsum(){
+        ArList = major.getList();
+        ListSize = ArList.size();
+
+        for(int i = 0; i < ListSize; i++) {
+
+            if(ArList.get(i).getItemCheck()) {
+
+                if(ArList.get(i).getLectureType().equals("전필")) {
+
+                    전필 += Integer.parseInt(ArList.get(i).getLectureCredit());
+
+                }
+                else if(ArList.get(i).getLectureType().equals("전선")){
+
+                    전선 += Integer.parseInt(ArList.get(i).getLectureCredit());
+
+                }
+            }
+        }
+    }
+
+    private void ConnectDB(String year) {
+
+        String[][] table = db.GetMinCredits(year);
+        전필최소 = table[1][1];
+        전선최소 = table[2][1];
+
     }
 }

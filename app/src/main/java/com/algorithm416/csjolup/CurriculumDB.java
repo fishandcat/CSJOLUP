@@ -234,6 +234,12 @@ public class CurriculumDB extends SQLiteOpenHelper {
      *  16년도 이상과 15년도 이하는 각각 다른 과정으로 반환
      *  15년도 이하는 KCC과정을 만족해야 하며 그에 맞는 과목으로 반환됨
      *  16년도 이상 과정은 일반 과정을 따라가며 각기 다른 강의 타입으로 10학점만 넘기면 됨
+     *
+     *  ~ 2015 [4][15]
+     *  연도, 전필, 전선, A, B, C, D, E, F, G, (A ~ G)합, M, S, (M, S)합, 졸업최소
+     *
+     *  2016 ~ [3][9]
+     *  연도, 전필, 전선, (공통,역량)필수, (공통,역량)선택, 핵심, 개척, 기초, 졸업최소
      */
     public String[][] GetMinCredits(String year) {
         if (myDataBase == null)
