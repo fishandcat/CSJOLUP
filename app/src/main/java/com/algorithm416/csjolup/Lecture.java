@@ -29,6 +29,16 @@ public class Lecture {
         bLecture = false;
     }
 
+    public Lecture(Lecture lecture){
+        grade = lecture.grade;
+        type = lecture.type;
+        num = lecture.num;
+        name = lecture.name;
+        credit = lecture.credit;
+        bChecked = lecture.bChecked;
+        bLecture = lecture.bLecture;
+    }
+
     public java.lang.String getGrade() {
         return grade;
     }

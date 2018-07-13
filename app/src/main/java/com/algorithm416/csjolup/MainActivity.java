@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ScaleDrawable;
+import android.net.Uri;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -46,7 +47,13 @@ import java.time.Instant;
 *
 * */
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements
+        Major.OnFragmentInteractionListener,
+        Liberal_arts.OnFragmentInteractionListener,
+        JolupRequirements.OnFragmentInteractionListener,
+        Grades.OnFragmentInteractionListener,
+        curriculum.OnFragmentInteractionListener
+{
 
     private ArrayAdapter<CharSequence> adMajorSpin, adCurriculumSpin;   // 스피너 어뎁터
     private ArrayAdapter<String> adDraList;                             // 드로우 리스트 어뎁터
@@ -116,14 +123,16 @@ public class MainActivity extends AppCompatActivity {
                 switch (position) {
                     case 1:
                         Toast.makeText(MainActivity.this, "졸업관리", Toast.LENGTH_SHORT).show();
-                        currfragment.CurriView.setVisibility(View.VISIBLE);
-                        currfragment.Changefrag.setVisibility(View.GONE);
+                        currfragment = curriculum.newInstance(SaveMajor,SaveCurriculum);
+                        //currfragment.CurriView.setVisibility(View.VISIBLE);
+                        //currfragment.Changefrag.setVisibility(View.GONE);
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.Fragment, currfragment).commit();
                         break;
                     case 2:
                         Toast.makeText(MainActivity.this, "학점관리", Toast.LENGTH_SHORT).show();
+                        grades =  Grades.newInstance(SaveMajor,SaveCurriculum);
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.Fragment, grades).commit();
@@ -281,6 +290,11 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
         }
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri){
+
     }
 
 }

@@ -13,7 +13,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 
 
 /**
@@ -33,6 +39,14 @@ public class Liberal_arts extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private ListView listView;
+    private LectureAdapter lectureAdapter;
+    private static ArrayList<Lecture> list = new ArrayList<>();
+    private ArrayAdapter<String> adapterLiberalArts;
+    private Spinner spinner_kcc;
+    private String[] menu = {"교양부분을 선택하세요", "KCC 비인증", "교양과목"};
+    private boolean isKCC;
 
     private CurriculumDB curriculumDB;
 
@@ -67,15 +81,57 @@ public class Liberal_arts extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
+        isKCC = false;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_liberal_arts, container, false);
 
+        listView = view.findViewById(R.id.liberal_arts_list);
+        lectureAdapter = new LectureAdapter(getContext(), R.layout.listview_lecture, list);
+        listView.setAdapter(lectureAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (list.get(i).isLecture()){
+                    boolean b = !list.get(i).getItemCheck();
+                    list.get(i).setItemCheck(b);
+                    if (b){
+                        Lecture temp = new Lecture(list.get(i));
+                        list.add(0, temp);
+                        lectureAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+        });
+
+
+        // 검색 조건 필터 kcc/일반적인 교양
+        spinner_kcc = (Spinner)view.findViewById(R.id.spinner_kcc);
+        adapterLiberalArts = new ArrayAdapter<String> (getContext(), android.R.layout.simple_list_item_1, menu);
+        spinner_kcc.setAdapter(adapterLiberalArts);
+        spinner_kcc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                switch(i){
+                    case 1:
+                        isKCC = true;
+                        break;
+                    case 2:
+                        isKCC = false;
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                spinner_kcc.setSelection(0);
+            }
+        });
         //curriculumDB = new CurriculumDB(getContext());
 
         return view;
@@ -94,7 +150,7 @@ public class Liberal_arts extends Fragment {
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
-            //throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
         }
     }
 

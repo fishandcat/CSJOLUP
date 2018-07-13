@@ -126,13 +126,15 @@ public class CurriculumDB extends SQLiteOpenHelper {
         for (int i = 0; i < result.getColumnCount(); i++) {
             table[i][0] = result.getColumnName(i);
         }
-
-        for (int i = 1; result.moveToNext(); i++)
+        result.moveToFirst();
+        int i = 1;
+        do
         {
             for (int j = 0; j < result.getColumnCount(); j++) {
                 table[j][i] = result.getString(j);
             }
-        }
+            i++;
+        }while (result.moveToNext());
 
         return table;
     }

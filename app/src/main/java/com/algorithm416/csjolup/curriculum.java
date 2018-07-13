@@ -1,6 +1,7 @@
 package com.algorithm416.csjolup;
 
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -48,15 +49,15 @@ public class curriculum extends Fragment {
 
     private InputMethodManager inputMethodManager;
 
-    private Major major;                // 전공 프래그먼트
-    private Liberal_arts liberalArts;   // 교양 프래그먼트
-    private JolupRequirements jolupRequirements;    // 졸업인증 프래그먼트
+//    private Major major;                // 전공 프래그먼트
+//    private Liberal_arts liberalArts;   // 교양 프래그먼트
+//    private JolupRequirements jolupRequirements;    // 졸업인증 프래그먼트
 
     private ViewPager viewPager;
     private SectionsPagerAdapter pagerAdapter;
 
-    public static FrameLayout Changefrag;  // 프래그먼트 변환용 레이아웃
-    public static RelativeLayout CurriView;      // 졸업관리 프래그먼트 UI 레이아웃
+    public FrameLayout Changefrag;  // 프래그먼트 변환용 레이아웃
+    public RelativeLayout CurriView;      // 졸업관리 프래그먼트 UI 레이아웃
 
     private OnFragmentInteractionListener mListener;
 
@@ -89,15 +90,11 @@ public class curriculum extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        pagerAdapter = new SectionsPagerAdapter(getFragmentManager());
 
-        major = Major.newInstance(mParam1, mParam2);
-        liberalArts = Liberal_arts.newInstance(mParam1, mParam2);
-        jolupRequirements = JolupRequirements.newInstance(mParam1,mParam2);
+//        major = Major.newInstance(mParam1, mParam2);
+//        liberalArts = Liberal_arts.newInstance(mParam1, mParam2);
+//        jolupRequirements = JolupRequirements.newInstance(mParam1,mParam2);
 
-        pagerAdapter.insertItem(major);
-        pagerAdapter.insertItem(liberalArts);
-        pagerAdapter.insertItem(jolupRequirements);
 
         // 키보드 숨기기 위한 관리변수
         inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -142,9 +139,14 @@ public class curriculum extends Fragment {
         Changefrag.setVisibility(View.GONE);
         CurriView.setVisibility(View.VISIBLE);
 
-        viewPager = (ViewPager) view.findViewById(R.id.pager);
+        pagerAdapter = new SectionsPagerAdapter(getFragmentManager(), mParam1, mParam2);
+        pagerAdapter.insertItem("Major");
+        pagerAdapter.insertItem("Liberal_arts");
+        pagerAdapter.insertItem("JolupRequirements");
 
+        viewPager = (ViewPager) view.findViewById(R.id.pager);
         viewPager.setAdapter(pagerAdapter);
+        viewPager.setOffscreenPageLimit(2);
         viewPager.setCurrentItem(0);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -162,6 +164,8 @@ public class curriculum extends Fragment {
 
             }
         });
+        viewPager.destroyDrawingCache();
+        pagerAdapter.notifyDataSetChanged();
 
         Majorbtn.setTag(0);
         LiberalArtsbtn.setTag(1);
@@ -201,7 +205,7 @@ public class curriculum extends Fragment {
             mListener = (OnFragmentInteractionListener) context;
         }
         else {
-            //throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
         }
     }
 
@@ -224,5 +228,12 @@ public class curriculum extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (pagerAdapter != null)
+            pagerAdapter.notifyDataSetChanged();
     }
 }
