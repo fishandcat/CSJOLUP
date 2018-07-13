@@ -11,10 +11,23 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_centerInParent="true"
+            android:background="#87CEFA"/>
+
         <Spinner
+            android:gravity="center"
             android:id="@+id/curriculum_cs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_centerInParent="true"
+            android:background="#87CEFA"/>
 
         <ListView
             android:id="@+id/major_list"

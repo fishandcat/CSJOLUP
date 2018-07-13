@@ -157,12 +157,11 @@ public class Grades extends Fragment {
 
             if(ArList.get(i).getItemCheck()) {
 
-                if(ArList.get(i).getLectureType().equals("전필")) {
+                if(ArList.get(i).getLectureType().contains("전필")) {
 
                     전필 += Integer.parseInt(ArList.get(i).getLectureCredit());
-
                 }
-                else if(ArList.get(i).getLectureType().equals("전선")){
+                else if(ArList.get(i).getLectureType().contains("전선")){
 
                     전선 += Integer.parseInt(ArList.get(i).getLectureCredit());
 

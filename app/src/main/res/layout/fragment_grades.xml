@@ -28,26 +28,64 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/전필텍스트"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="TextView" />
+                    android:orientation="horizontal"
+                    android:background="#87CEFA">
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|end"
+                        android:text="전공필수 학점 : "
+                        android:textSize="12pt"/>
+
+                    <TextView
+                        android:id="@+id/전필텍스트"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="#87CEFA"
+                        android:gravity="center"
+                        android:text="testtext"
+                        android:textSize="12pt"/>
+
+                </LinearLayout>
 
                 <Space
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1" />
 
-                <TextView
-                    android:id="@+id/전선텍스트"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="@string/hello_blank_fragment" />
+                    android:orientation="horizontal"
+                    android:background="#87CEFA">
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|end"
+                        android:text="전공선택 학점 : "
+                        android:textSize="12pt"/>
+
+                    <TextView
+                        android:id="@+id/전선텍스트"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="testtext"
+                        android:textSize="12pt"/>
+                </LinearLayout>
 
             </LinearLayout>
         </RelativeLayout>
