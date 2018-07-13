@@ -1,10 +1,12 @@
 package com.algorithm416.csjolup;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -40,10 +42,6 @@ public class curriculum extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private Button Majorbtn;            // 전공 버튼
-    private Button LiberalArtsbtn;      // 교양 버튼
-    private Button Jolupbtn;
-
     private String mParam1;
     private String mParam2;
 
@@ -55,6 +53,8 @@ public class curriculum extends Fragment {
 
     private ViewPager viewPager;
     private SectionsPagerAdapter pagerAdapter;
+
+    private TabLayout tabLayout;
 
     public FrameLayout Changefrag;  // 프래그먼트 변환용 레이아웃
     public RelativeLayout CurriView;      // 졸업관리 프래그먼트 UI 레이아웃
@@ -129,23 +129,24 @@ public class curriculum extends Fragment {
             }
         });
 
-        Majorbtn = (Button) view.findViewById(R.id.majorButton);
-        LiberalArtsbtn = (Button) view.findViewById(R.id.liberalArtButton);
-        Jolupbtn = (Button) view.findViewById(R.id.jolupButton);
+        Changefrag = (FrameLayout) view.findViewById(R.id.fragment);
+        CurriView = (RelativeLayout) view.findViewById(R.id.CurriView);
 
-        Changefrag = (FrameLayout) view.findViewById(R.id.CurriView);
-        CurriView = (RelativeLayout) view.findViewById(R.id.fragment);
-
-        Changefrag.setVisibility(View.GONE);
-        CurriView.setVisibility(View.VISIBLE);
+        Changefrag.setVisibility(View.VISIBLE);
+        CurriView.setVisibility(View.GONE);
 
         pagerAdapter = new SectionsPagerAdapter(getFragmentManager(), mParam1, mParam2);
         pagerAdapter.insertItem("Major");
         pagerAdapter.insertItem("Liberal_arts");
         pagerAdapter.insertItem("JolupRequirements");
 
+        tabLayout = (TabLayout) view.findViewById(R.id.tabs);
+
         viewPager = (ViewPager) view.findViewById(R.id.pager);
         viewPager.setAdapter(pagerAdapter);
+
+        tabLayout.setupWithViewPager(viewPager, true);
+
         viewPager.setOffscreenPageLimit(2);
         viewPager.setCurrentItem(0);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -167,26 +168,17 @@ public class curriculum extends Fragment {
         viewPager.destroyDrawingCache();
         pagerAdapter.notifyDataSetChanged();
 
-        Majorbtn.setTag(0);
-        LiberalArtsbtn.setTag(1);
-        Jolupbtn.setTag(2);
-
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int tag = (int)view.getTag();
-                viewPager.setCurrentItem(tag, true);
-                if (CurriView.getVisibility() == View.VISIBLE){
-                    Changefrag.setVisibility(View.VISIBLE);
-                    CurriView.setVisibility(View.GONE);
+                switch (view.getId()) {
+                    case R.id.textView:
+                        Changefrag.setVisibility(View.VISIBLE);
+                        CurriView.setVisibility(View.GONE);
+                        break;
                 }
             }
         };
-
-        //버튼 클릭시 프레그먼트 변경
-        Majorbtn.setOnClickListener(onClickListener);
-        LiberalArtsbtn.setOnClickListener(onClickListener);
-        Jolupbtn.setOnClickListener(onClickListener);
 
         return view;
     }
@@ -230,10 +222,4 @@ public class curriculum extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (pagerAdapter != null)
-            pagerAdapter.notifyDataSetChanged();
-    }
 }

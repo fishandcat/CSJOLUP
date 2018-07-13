@@ -1,6 +1,7 @@
 package com.algorithm416.csjolup;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -57,5 +58,19 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
     public int getItemPosition(@NonNull Object object) {
         return POSITION_NONE;
 //        return super.getItemPosition(object);
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        switch (fragmentList.get(position)) {
+            case "Major":
+                return "전공";
+            case "Liberal_arts":
+                return "교양";
+            case "JolupRequirements":
+                return "졸업관리";
+            default:
+                return null;
+        }
     }
 }
