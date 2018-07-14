@@ -216,7 +216,7 @@ public class Major extends Fragment {
             }
         }
 
-        for (int i = 1; i < table[0].length - 1; i++) {
+        for (int i = 1; i < table[0].length; i++) {
             if (grade_count != Integer.parseInt(table[grade][i])) {
                 grade_count = Integer.parseInt(table[grade][i]);
                 int temp = grade_count % 10;
@@ -238,14 +238,13 @@ public class Major extends Fragment {
 
             if (!bReload) {
                 if (table[exist][i].equals("N"))
-                    list.add(new Lecture(table[grade][i], "사라짐", table[num][i], table[name][i], table[credit][i]));
+                    list.add(new Lecture(table[grade][i], table[type][i] + " (사라짐)", table[num][i], table[name][i], table[credit][i]));
                 else
                     list.add(new Lecture(table[grade][i], table[type][i], table[num][i], table[name][i], table[credit][i]));
             }
 
         }
         lectureAdapter.notifyDataSetChanged();
-        Toast.makeText(getContext(), "DB 접속", Toast.LENGTH_LONG).show();
     }
 
     public static ArrayList<Lecture> getList() {

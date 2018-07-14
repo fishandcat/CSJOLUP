@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,9 +21,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.util.jar.Attributes;
 
 import static android.view.View.GONE;
 
@@ -46,10 +50,6 @@ public class curriculum extends Fragment {
     private String mParam2;
 
     private InputMethodManager inputMethodManager;
-
-//    private Major major;                // 전공 프래그먼트
-//    private Liberal_arts liberalArts;   // 교양 프래그먼트
-//    private JolupRequirements jolupRequirements;    // 졸업인증 프래그먼트
 
     private ViewPager viewPager;
     private SectionsPagerAdapter pagerAdapter;
@@ -91,11 +91,6 @@ public class curriculum extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-//        major = Major.newInstance(mParam1, mParam2);
-//        liberalArts = Liberal_arts.newInstance(mParam1, mParam2);
-//        jolupRequirements = JolupRequirements.newInstance(mParam1,mParam2);
-
-
         // 키보드 숨기기 위한 관리변수
         inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
     }
@@ -112,15 +107,17 @@ public class curriculum extends Fragment {
             // 뒤로가기 버튼 기능
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if(event.getAction() == KeyEvent.ACTION_UP) {
+                if(event.getAction() == KeyEvent.ACTION_DOWN) {
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        if (CurriView.getVisibility() == View.VISIBLE) {
-                            getActivity().onBackPressed();
-                            return false;
-                        } else {
-                            Changefrag.setVisibility(View.GONE);
-                            CurriView.setVisibility(View.VISIBLE);
-                        }
+                        if (inputMethodManager.isActive())
+                            return true;
+//                        if (CurriView.getVisibility() == View.VISIBLE) {
+//                            getActivity().onBackPressed();
+//                            return false;
+//                        } else {
+//                            Changefrag.setVisibility(View.GONE);
+//                            CurriView.setVisibility(View.VISIBLE);
+//                        }
                     }
                     return true;
                 } else {
@@ -152,12 +149,12 @@ public class curriculum extends Fragment {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
-                inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+
             }
 
             @Override
             public void onPageSelected(int i) {
-
+                inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), 0);
             }
 
             @Override
@@ -221,5 +218,4 @@ public class curriculum extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-
 }

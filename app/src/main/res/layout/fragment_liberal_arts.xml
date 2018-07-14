@@ -18,7 +18,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <Spinner
@@ -27,11 +27,12 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
-            <EditText
+            <com.algorithm416.csjolup.CustomEditText
                 android:id="@+id/liberal_arts_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:hint="여기에 강의 이름을 작성해 주세요."
                 android:inputType="text"
                 android:singleLine="true" />
 
@@ -42,6 +43,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1" />
+
+        <ListView
+            android:id="@+id/search_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 

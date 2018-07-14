@@ -208,8 +208,8 @@ public class CurriculumDB extends SQLiteOpenHelper {
         return table;
     }
 
-    // 학수번호 혹은 강의 명을 이용한 강의 검색기능
-    // 학수번호 혹은 강의 명, 표시할 리스트 수, 전공/교양
+    // 강의 명을 이용한 강의 검색기능
+    // 강의 명, 표시할 리스트 수, 전공/교양
     public String[][] SearchLecture(String lecture, int nListCount, int lectrueType) {
         if (myDataBase == null)
             openDatabase();
@@ -217,14 +217,8 @@ public class CurriculumDB extends SQLiteOpenHelper {
             openDatabase();
 
         Cursor result = lectrueType != MAJOR ?
-                myDataBase.rawQuery("SELECT * FROM liberal_arts WHERE lecture_num>='" + lecture + "' ORDER BY lecture_num ASC LIMIT " + nListCount, null) :
-                myDataBase.rawQuery("SELECT * FROM lecture_cs WHERE lecture_num>='" + lecture + "' ORDER BY lecture_num ASC LIMIT " + nListCount, null);
-
-        if (result == null || !result.moveToFirst()) {
-            result = lectrueType != MAJOR ?
-                    myDataBase.rawQuery("SELECT * FROM liberal_arts WHERE lecture_name>='" + lecture + "' ORDER BY lecture_name ASC LIMIT " + nListCount, null) :
-                    myDataBase.rawQuery("SELECT * FROM lecture_cs WHERE lecture_name>='" + lecture + "' ORDER BY lecture_name ASC LIMIT " + nListCount, null);
-        }
+                myDataBase.rawQuery("SELECT * FROM liberal_arts WHERE lecture_name>='" + lecture + "' ORDER BY lecture_name ASC LIMIT " + nListCount, null) :
+                myDataBase.rawQuery("SELECT * FROM lecture_cs WHERE lecture_name>='" + lecture + "' ORDER BY lecture_name ASC LIMIT " + nListCount, null);
 
         String[][] table = getTable(result);
 
