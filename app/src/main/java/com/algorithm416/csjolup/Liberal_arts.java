@@ -165,7 +165,28 @@ public class Liberal_arts extends Fragment {
                 listSearch.clear();
                 switch (i) {
                     case 1:
-                        isKCC = true;
+                        if (mParam2.compareTo("2015") <= 0) {
+                            isKCC = true;
+                        } else {
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                            alertDialogBuilder
+                                    .setTitle("공학인증 교육과정이 아닙니다.")
+                                    .setMessage(mParam2 + "교육과정은 KCC 공학 비인증 대상 교육과정이 아닙니다.")
+                                    .setNegativeButton("확인", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            dialogInterface.cancel();
+                                        }
+                                    });
+
+                            // 다이얼로그 생성
+                            AlertDialog alertDialog = alertDialogBuilder.create();
+
+                            // 다이얼로그 보여주기
+                            alertDialog.show();
+
+                            spinner_kcc.setSelection(2);
+                        }
                         break;
                     case 2:
                         isKCC = false;
@@ -173,6 +194,7 @@ public class Liberal_arts extends Fragment {
                 }
                 if ((i & 3) != 0){
                     ConnectDB();
+                    CheckText(searchText.getText().toString());
                 }
                 searchAdapter.notifyDataSetChanged();
             }
@@ -220,22 +242,7 @@ public class Liberal_arts extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                listSearch.clear();
-                if (searchText.getText().toString().length() == 0) {
-                    listSearch.addAll(listLectures);
-                    searchAdapter.notifyDataSetChanged();
-                    return;
-                }
-                if (spinner_kcc.getSelectedItemPosition() > 0) {
-                    for (int j = 0, k = 0; j < listLectures.size(); j++) {
-                        if (listLectures.get(j).getLectureName().toLowerCase().contains(searchText.getText().toString())) {
-                            listSearch.add(listLectures.get(j));
-                            if (++k > 15)
-                                break;
-                        }
-                    }
-                }
-                searchAdapter.notifyDataSetChanged();
+                CheckText(searchText.getText().toString());
             }
         });
         searchText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -319,13 +326,32 @@ public class Liberal_arts extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    private void CheckText(String text){
+        listSearch.clear();
+        if (text.length() == 0) {
+            listSearch.addAll(listLectures);
+            searchAdapter.notifyDataSetChanged();
+            return;
+        }
+
+        if (spinner_kcc.getSelectedItemPosition() > 0) {
+            for (int j = 0, k = 0; j < listLectures.size(); j++) {
+                if (listLectures.get(j).getLectureName().toLowerCase().contains(text)) {
+                    listSearch.add(listLectures.get(j));
+                    if (++k > 15)
+                        break;
+                }
+            }
+        }
+        searchAdapter.notifyDataSetChanged();
+    }
+
     private void ConnectDB() {
         String[][] table = null;
         int type = 0, num = 0, name = 0, credit = 0;
 
         if (isKCC) {
             table = curriculumDB.getKCC(mParam2);
-
         } else {
             table = curriculumDB.SearchLecture("*", 300, CurriculumDB.LIBERAL_ARTS);
         }
