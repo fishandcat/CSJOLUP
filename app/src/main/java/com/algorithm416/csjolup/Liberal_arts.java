@@ -178,19 +178,14 @@ public class Liberal_arts extends Fragment {
 
         // 검색 조건 필터 kcc/일반적인 교양
         spinner_kcc = (Spinner) view.findViewById(R.id.spinner_kcc);
-        adapterLiberalArts = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, menu);
-        spinner_kcc.setAdapter(adapterLiberalArts);
-        spinner_kcc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                listLectures.clear();
-                listSearch.clear();
-                if (mParam2.compareTo("2015") > 0) {
-                    if (i != 0) {
-                        isKCC = false;
-                        ConnectDB();
-                    }
-                } else {
+        if (mParam2.compareTo("2016") < 0) {
+            adapterLiberalArts = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, menu);
+            spinner_kcc.setAdapter(adapterLiberalArts);
+            spinner_kcc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    listLectures.clear();
+                    listSearch.clear();
                     if (i > 0) {
                         if (adapterLiberalArts.getCount() - 1 > i) {
                             isKCC = true;
@@ -202,21 +197,25 @@ public class Liberal_arts extends Fragment {
                             ConnectDB();
                         }
                     }
+
+                    if (i != 0) {
+                        CheckText(searchText.getText().toString());
+                    }
+
+                    searchAdapter.notifyDataSetChanged();
                 }
 
-                if (i != 0) {
-                    CheckText(searchText.getText().toString());
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+                    spinner_kcc.setSelection(0);
+                    adapterLiberalArts.notifyDataSetChanged();
                 }
-
-                searchAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                spinner_kcc.setSelection(0);
-                adapterLiberalArts.notifyDataSetChanged();
-            }
-        });
+            });
+        } else {
+            isKCC = false;
+            spinner_kcc.setVisibility(View.GONE);
+            ConnectDB();
+        }
 
         // 검색 리스트뷰
         searchView = view.findViewById(R.id.search_list);
@@ -356,7 +355,7 @@ public class Liberal_arts extends Fragment {
         searchAdapter.notifyDataSetChanged();
     }
 
-    private void ConnectDB(){
+    private void ConnectDB() {
         ConnectDB(mParam2);
     }
 
@@ -408,7 +407,7 @@ public class Liberal_arts extends Fragment {
         lectureAdapter.notifyDataSetChanged();
     }
 
-    private void ErrorKCC(){
+    private void ErrorKCC() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
         alertDialogBuilder
                 .setTitle("공학인증 교육과정이 아닙니다.")
@@ -427,7 +426,7 @@ public class Liberal_arts extends Fragment {
         alertDialog.show();
     }
 
-    public static ArrayList<Lecture> getList(){
+    public static ArrayList<Lecture> getList() {
         return list;
     }
 }
