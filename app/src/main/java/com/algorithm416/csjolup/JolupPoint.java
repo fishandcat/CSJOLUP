@@ -4,12 +4,10 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -17,12 +15,12 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Grades.OnFragmentInteractionListener} interface
+ * {@link JolupPoint.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link Grades#newInstance} factory method to
+ * Use the {@link JolupPoint#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Grades extends Fragment {
+public class JolupPoint extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -34,24 +32,29 @@ public class Grades extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private SectionsPagerAdapter pagerAdapter;
+    private String MinJopup;
 
-    private ViewPager viewPager;
+    private TextView TextJolup;
 
-    public Grades() {
+    private ArrayList<Lecture> ArList;
+
+    private CurriculumDB db;
+
+    public JolupPoint() {
         // Required empty public constructor
     }
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Grades.
+     * @return A new instance of fragment JolupPoint.
      */
     // TODO: Rename and change types and number of parameters
-    public static Grades newInstance(String param1, String param2) {
-        Grades fragment = new Grades();
+    public static JolupPoint newInstance(String param1, String param2) {
+        JolupPoint fragment = new JolupPoint();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -67,45 +70,17 @@ public class Grades extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        pagerAdapter = new SectionsPagerAdapter(getFragmentManager(), mParam1, mParam2);
-        pagerAdapter.insertItem("MajorPoint");
-        pagerAdapter.insertItem("LecturePoint");
-        pagerAdapter.insertItem("JolupPoint");
+        db = new CurriculumDB(getContext());
+
+        ConnectDB(mParam2);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-
-        View view = inflater.inflate(R.layout.fragment_grades, container, false);
-
-        viewPager = (ViewPager) view.findViewById(R.id.GradesPager);
-
-        viewPager.setAdapter(pagerAdapter);
-        viewPager.setOffscreenPageLimit(2);
-        viewPager.setCurrentItem(0);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int i, float v, int i1) {
-
-            }
-
-            @Override
-            public void onPageSelected(int i) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {
-
-            }
-        });
-
-        viewPager.destroyDrawingCache();
-        pagerAdapter.notifyDataSetChanged();
-
-        return view;
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_jolup_point, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -121,7 +96,8 @@ public class Grades extends Fragment {
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
         }
     }
 
@@ -145,4 +121,24 @@ public class Grades extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+    private void ConnectDB(String year) {
+
+        String[][] table = db.GetMinCredits(year);
+        switch (year)
+        {
+            case "2012":
+            case "2013":
+            case "2014":
+            case "2015":
+                MinJopup = table[14][1];
+                break;
+            case "2016":
+            case "2017":
+            case "2018":
+                MinJopup = table[8][1];
+                break;
+        }
+    }
+
 }

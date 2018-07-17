@@ -4,12 +4,10 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -17,12 +15,12 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Grades.OnFragmentInteractionListener} interface
+ * {@link MajorPoint.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link Grades#newInstance} factory method to
+ * Use the {@link MajorPoint#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Grades extends Fragment {
+public class MajorPoint extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -34,24 +32,43 @@ public class Grades extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private SectionsPagerAdapter pagerAdapter;
+    private String 전필최소;
+    private String 전선최소;
 
-    private ViewPager viewPager;
+    private int ListSize;
+    private int 전필 = 0;
+    private int 전선 = 0;
+    private int 교직 = 0;
 
-    public Grades() {
+    private TextView 전필텍스트;
+    private TextView 전선텍스트;
+
+    private Lecture lecture;
+    private Major major;
+
+    private ArrayList<Lecture> ArList;
+
+    private CurriculumDB db;
+
+    public MajorPoint() {
         // Required empty public constructor
     }
+
+    public Lecture getItem(int position){
+        return ArList.get(position);
+    }
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Grades.
+     * @return A new instance of fragment MajorPoint.
      */
     // TODO: Rename and change types and number of parameters
-    public static Grades newInstance(String param1, String param2) {
-        Grades fragment = new Grades();
+    public static MajorPoint newInstance(String param1, String param2) {
+        MajorPoint fragment = new MajorPoint();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -66,44 +83,23 @@ public class Grades extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        db = new CurriculumDB(getContext());
 
-        pagerAdapter = new SectionsPagerAdapter(getFragmentManager(), mParam1, mParam2);
-        pagerAdapter.insertItem("MajorPoint");
-        pagerAdapter.insertItem("LecturePoint");
-        pagerAdapter.insertItem("JolupPoint");
+        ConnectDB(mParam2);
+
+        Majorpointsum();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_major_point, container, false);
 
-        View view = inflater.inflate(R.layout.fragment_grades, container, false);
+        전필텍스트 = (TextView) view.findViewById(R.id.전필텍스트);
+        전선텍스트 = (TextView) view.findViewById(R.id.전선텍스트);
 
-        viewPager = (ViewPager) view.findViewById(R.id.GradesPager);
-
-        viewPager.setAdapter(pagerAdapter);
-        viewPager.setOffscreenPageLimit(2);
-        viewPager.setCurrentItem(0);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int i, float v, int i1) {
-
-            }
-
-            @Override
-            public void onPageSelected(int i) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {
-
-            }
-        });
-
-        viewPager.destroyDrawingCache();
-        pagerAdapter.notifyDataSetChanged();
+        SettingCurriculum();
 
         return view;
     }
@@ -121,7 +117,8 @@ public class Grades extends Fragment {
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
         }
     }
 
@@ -144,5 +141,38 @@ public class Grades extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void Majorpointsum(){
+        ArList = major.getList();
+        ListSize = ArList.size();
+
+        for(int i = 0; i < ListSize; i++) {
+
+            if(ArList.get(i).getItemCheck()) {
+
+                if(ArList.get(i).getLectureType().contains("전필")) {
+                    전필 += Integer.parseInt(ArList.get(i).getLectureCredit());
+                }
+                else if(ArList.get(i).getLectureType().contains("전선")){
+                    전선 += Integer.parseInt(ArList.get(i).getLectureCredit());
+                }
+            }
+        }
+    }
+
+    private void ConnectDB(String year) {
+
+        String[][] table = db.GetMinCredits(year);
+        전필최소 = table[1][1];
+        전선최소 = table[2][1];
+    }
+
+    public void SettingCurriculum(){
+        전필텍스트.setText(""+ 전필 + " / " + 전필최소);
+        전필 = 0;
+
+        전선텍스트.setText(""+ 전선 + " / " + 전선최소);
+        전선 = 0;
     }
 }

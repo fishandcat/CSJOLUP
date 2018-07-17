@@ -118,6 +118,7 @@ public class Liberal_arts extends Fragment {
         View view = inflater.inflate(R.layout.fragment_liberal_arts, container, false);
 
         listLectures = new ArrayList<>();
+        curriculumDB = new CurriculumDB(getContext());
 
         // 체크된 강의들
         listView = view.findViewById(R.id.liberal_arts_list);
@@ -216,8 +217,6 @@ public class Liberal_arts extends Fragment {
                 adapterLiberalArts.notifyDataSetChanged();
             }
         });
-
-        curriculumDB = new CurriculumDB(getContext());
 
         // 검색 리스트뷰
         searchView = view.findViewById(R.id.search_list);
@@ -428,7 +427,7 @@ public class Liberal_arts extends Fragment {
         alertDialog.show();
     }
 
-    public ArrayList<Lecture> getList() {
+    public static ArrayList<Lecture> getList(){
         return list;
     }
 }

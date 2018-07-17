@@ -43,6 +43,15 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
             case "JolupRequirements":
                 fr = JolupRequirements.newInstance(mParam1, mParam2);
                 break;
+            case "MajorPoint" :
+                fr = MajorPoint.newInstance(mParam1, mParam2);
+                break;
+            case "LecturePoint" :
+                fr = LecturePoint.newInstance(mParam1, mParam2);
+                break;
+            case "JolupPoint" :
+                fr = JolupPoint.newInstance(mParam1, mParam2);
+                break;
         }
 
         return fr;

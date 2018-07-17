@@ -52,7 +52,10 @@ public class MainActivity extends AppCompatActivity implements
         Liberal_arts.OnFragmentInteractionListener,
         JolupRequirements.OnFragmentInteractionListener,
         Grades.OnFragmentInteractionListener,
-        curriculum.OnFragmentInteractionListener
+        curriculum.OnFragmentInteractionListener,
+        MajorPoint.OnFragmentInteractionListener,
+        LecturePoint.OnFragmentInteractionListener,
+        JolupPoint.OnFragmentInteractionListener
 {
 
     private ArrayAdapter<CharSequence> adMajorSpin, adCurriculumSpin;   // 스피너 어뎁터

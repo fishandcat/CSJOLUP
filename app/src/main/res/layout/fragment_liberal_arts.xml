@@ -25,14 +25,14 @@
                 android:id="@+id/spinner_kcc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1.5" />
 
             <com.algorithm416.csjolup.CustomEditText
                 android:id="@+id/liberal_arts_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="여기에 강의 이름을 작성해 주세요."
+                android:hint="강의명을 입력하세요"
                 android:inputType="text"
                 android:singleLine="true" />
 
