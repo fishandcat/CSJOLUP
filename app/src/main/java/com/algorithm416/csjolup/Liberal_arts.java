@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.renderscript.ScriptGroup;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -28,6 +29,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 
 /**
@@ -63,7 +68,7 @@ public class Liberal_arts extends Fragment {
     private ArrayList<Lecture> listLectures;
 
     private Spinner spinner_kcc;
-    private String[] menu = {"교양부분을 선택하세요", "KCC 비인증", "교양과목"};
+    private String[] menu;
     private ArrayAdapter<String> adapterLiberalArts;
     private boolean isKCC;
 
@@ -153,6 +158,22 @@ public class Liberal_arts extends Fragment {
             }
         });
 
+        // 스피너에 들어갈 텍스트
+        ArrayList<String> temp = new ArrayList<>();
+        temp.add("선택하세요");
+        switch (mParam2) {
+            case "2012":
+                temp.add("2012 KCC");
+            case "2013":
+                temp.add("2013 KCC");
+            case "2014":
+                temp.add("2014 KCC");
+            case "2015":
+                temp.add("2015 KCC");
+            default:
+                temp.add("교양과목");
+        }
+        menu = temp.toArray(new String[temp.size()]);
 
         // 검색 조건 필터 kcc/일반적인 교양
         spinner_kcc = (Spinner) view.findViewById(R.id.spinner_kcc);
@@ -163,39 +184,29 @@ public class Liberal_arts extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 listLectures.clear();
                 listSearch.clear();
-                switch (i) {
-                    case 1:
-                        if (mParam2.compareTo("2015") <= 0) {
-                            isKCC = true;
-                        } else {
-                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
-                            alertDialogBuilder
-                                    .setTitle("공학인증 교육과정이 아닙니다.")
-                                    .setMessage(mParam2 + "교육과정은 KCC 공학 비인증 대상 교육과정이 아닙니다.")
-                                    .setNegativeButton("확인", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            dialogInterface.cancel();
-                                        }
-                                    });
-
-                            // 다이얼로그 생성
-                            AlertDialog alertDialog = alertDialogBuilder.create();
-
-                            // 다이얼로그 보여주기
-                            alertDialog.show();
-
-                            spinner_kcc.setSelection(2);
-                        }
-                        break;
-                    case 2:
+                if (mParam2.compareTo("2015") > 0) {
+                    if (i != 0) {
                         isKCC = false;
-                        break;
+                        ConnectDB();
+                    }
+                } else {
+                    if (i > 0) {
+                        if (adapterLiberalArts.getCount() - 1 > i) {
+                            isKCC = true;
+                            char[] temp = mParam2.toCharArray();
+                            temp[temp.length - 1] += (i - 1);
+                            ConnectDB(String.copyValueOf(temp));
+                        } else {
+                            isKCC = false;
+                            ConnectDB();
+                        }
+                    }
                 }
-                if ((i & 3) != 0){
-                    ConnectDB();
+
+                if (i != 0) {
                     CheckText(searchText.getText().toString());
                 }
+
                 searchAdapter.notifyDataSetChanged();
             }
 
@@ -217,9 +228,9 @@ public class Liberal_arts extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 listSearch.get(i).setItemCheck(!listSearch.get(i).getItemCheck());
-                if (listSearch.get(i).getItemCheck()){
+                if (listSearch.get(i).getItemCheck()) {
                     list.add(list.size(), listSearch.get(i));
-                }else {
+                } else {
                     list.remove(listSearch.get(i));
                 }
                 searchAdapter.notifyDataSetChanged();
@@ -228,7 +239,7 @@ public class Liberal_arts extends Fragment {
         searchView.setFocusable(true);
 
         // 검색바
-        searchText = (CustomEditText)view.findViewById(R.id.liberal_arts_search);
+        searchText = (CustomEditText) view.findViewById(R.id.liberal_arts_search);
         searchText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -269,7 +280,7 @@ public class Liberal_arts extends Fragment {
         searchText.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (i == KeyEvent.KEYCODE_ENTER)){
+                if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (i == KeyEvent.KEYCODE_ENTER)) {
                     //InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     //inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
                     listSearch.clear();
@@ -326,7 +337,7 @@ public class Liberal_arts extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    private void CheckText(String text){
+    private void CheckText(String text) {
         listSearch.clear();
         if (text.length() == 0) {
             listSearch.addAll(listLectures);
@@ -346,12 +357,16 @@ public class Liberal_arts extends Fragment {
         searchAdapter.notifyDataSetChanged();
     }
 
-    private void ConnectDB() {
+    private void ConnectDB(){
+        ConnectDB(mParam2);
+    }
+
+    private void ConnectDB(String year) {
         String[][] table = null;
         int type = 0, num = 0, name = 0, credit = 0;
 
         if (isKCC) {
-            table = curriculumDB.getKCC(mParam2);
+            table = curriculumDB.getKCC(year);
         } else {
             table = curriculumDB.SearchLecture("*", 300, CurriculumDB.LIBERAL_ARTS);
         }
@@ -375,38 +390,60 @@ public class Liberal_arts extends Fragment {
         for (int i = 1; i < table[0].length; i++) {
             // 본 함수가 다시 불러질 때 체크되어 있는 항목이 이미 존재하고 있으므로
             // 그 부분을 확인하여 리스트뷰에 등록하지 않는다.
-            boolean bReload = false;
-            for (int j = 0; j < listLectures.size(); j++) {
-                if (listLectures.get(j).isLecture()) {
-                    if (listLectures.get(j).getLectureNum().equals(table[num][i])) {
-                        bReload = true;
+            boolean bReload = true;
+            for (int j = 0; j < list.size(); j++) {
+                if (list.get(j).isLecture()) {
+                    if (list.get(j).getLectureNum().equals(table[num][i])) {
+                        bReload = false;
+                        listLectures.add(list.get(j));
                         break;
                     }
                 }
             }
 
-            listLectures.add(new Lecture("", table[type][i], table[num][i], table[name][i], table[credit][i]));
+            if (bReload) {
+                listLectures.add(new Lecture("", table[type][i], table[num][i], table[name][i], table[credit][i]));
+            }
         }
 
         lectureAdapter.notifyDataSetChanged();
     }
 
-    public ArrayList<Lecture> getList(){
+    private void ErrorKCC(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+        alertDialogBuilder
+                .setTitle("공학인증 교육과정이 아닙니다.")
+                .setMessage(mParam2 + "교육과정은 KCC 공학 비인증 대상 교육과정이 아닙니다.")
+                .setNegativeButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+
+        // 다이얼로그 생성
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // 다이얼로그 보여주기
+        alertDialog.show();
+    }
+
+    public ArrayList<Lecture> getList() {
         return list;
     }
 }
 
 class CustomEditText extends AppCompatEditText {
 
-    public CustomEditText(Context context){
+    public CustomEditText(Context context) {
         super(context);
     }
 
-    public CustomEditText(Context context, AttributeSet attrs){
+    public CustomEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public CustomEditText(Context context, AttributeSet attrs, int defStyleAttr){
+    public CustomEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 

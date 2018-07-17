@@ -154,7 +154,8 @@ public class curriculum extends Fragment {
 
             @Override
             public void onPageSelected(int i) {
-                inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+                viewPager.clearFocus();
+                inputMethodManager.hideSoftInputFromWindow(viewPager.getWindowToken(), 0);
             }
 
             @Override
