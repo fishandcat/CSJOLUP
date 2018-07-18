@@ -343,7 +343,7 @@ public class Liberal_arts extends Fragment {
             return;
         }
 
-        if (spinner_kcc.getSelectedItemPosition() > 0) {
+        if (listLectures.size() > 0) {
             for (int j = 0, k = 0; j < listLectures.size(); j++) {
                 if (listLectures.get(j).getLectureName().toLowerCase().contains(text)) {
                     listSearch.add(listLectures.get(j));
