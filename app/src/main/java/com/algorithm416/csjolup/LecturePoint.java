@@ -50,6 +50,8 @@ public class LecturePoint extends Fragment {
 
     // 16 ~ 18 학번
     private String 공통역량교양;
+    private String 공통역량선택교양;
+    private String 핵심교양;
 
 
     private int ListSize; // 리스트 사이즈
@@ -69,7 +71,19 @@ public class LecturePoint extends Fragment {
     private int MS_Sum_Point = 0;
 
     // 16 ~ 18 학번
-    private int 공통역량필수 = 0;
+    private int 공통역량필수_point = 0;
+    private int 공통역량선택_point = 0;
+
+    private int 문학과문화_point = 0;
+    private int 역사와철학_point = 0;
+    private int 인간과사회_point = 0;
+    private int 생명과환경_point = 0;
+    private int 과학과기술_point = 0;
+    private int 예술과체육_point = 0;
+    private int 융복합교과군_point = 0;
+
+    private int 핵심교양수강횟수_point = 0;
+    private int 핵심교양_point  = 0;
 
     // 12 ~ 15 학번
     private TextView TextA;
@@ -87,8 +101,23 @@ public class LecturePoint extends Fragment {
     private TextView TextMS_Sum; // BSM
 
     // 16 ~ 18 학번
-    private TextView Text공통역량;
-    private TextView 공통역량교양텍스트;
+    private TextView Text공통역량필수; // 공통, 역량을 표기하는 텍스트
+    private TextView 공통역량교양텍스트; // 점수를 표기하는 텍스트
+
+    private TextView Text공통역량선택; // 공통, 역량을 표기하는 텍스트
+    private TextView 공통역량선택텍스트; // 점수를 표기하는 텍스트
+
+    private TextView 문학과문화텍스트;
+    private TextView 역사와철학텍스트;
+    private TextView 인간과사회텍스트;
+    private TextView 생명과환경텍스트;
+    private TextView 과학과기술텍스트;
+    private TextView 예술과체육텍스트;
+    private TextView 융복합교과군텍스트;
+
+    private TextView 핵심교양수강횟수텍스트;
+    private TextView Text핵심교양;
+    private TextView 핵심교양텍스트;
 
     private ArrayList<Lecture> ArList;
 
@@ -163,8 +192,23 @@ public class LecturePoint extends Fragment {
         TextS = (TextView) view.findViewById(R.id.textS);
         TextMS_Sum = (TextView) view.findViewById(R.id.textMS_SUM);
 
-        공통역량교양텍스트 = (TextView) view.findViewById(R.id.공통역량);
-        Text공통역량 = (TextView) view.findViewById(R.id.text공통역량);
+        Text공통역량필수 = (TextView) view.findViewById(R.id.text공통역량필수);
+        공통역량교양텍스트 = (TextView) view.findViewById(R.id.공통역량필수);
+
+        Text공통역량선택 = (TextView) view.findViewById(R.id.text공통역량선택);
+        공통역량선택텍스트 = (TextView) view.findViewById(R.id.공통역량선택);
+
+        문학과문화텍스트 = (TextView) view.findViewById(R.id.문학과문화);
+        역사와철학텍스트 = (TextView) view.findViewById(R.id.역사와철학);
+        인간과사회텍스트 = (TextView) view.findViewById(R.id.인간과사회);
+        생명과환경텍스트 = (TextView) view.findViewById(R.id.생명과환경);
+        과학과기술텍스트 = (TextView) view.findViewById(R.id.과학과기술);
+        예술과체육텍스트 = (TextView) view.findViewById(R.id.예술과체육);
+        융복합교과군텍스트 = (TextView) view.findViewById(R.id.융복합교과군);
+
+        핵심교양수강횟수텍스트 = (TextView) view.findViewById(R.id.핵심교양수강횟수);
+        Text핵심교양 = (TextView) view.findViewById(R.id.text핵심교양);
+        핵심교양텍스트 = (TextView) view.findViewById(R.id.핵심교양);
 
         view4 = (View) view.findViewById(R.id.view4);
 
@@ -247,6 +291,15 @@ public class LecturePoint extends Fragment {
                         } else if (ArList.get(i).getLectureType().contains("S")) {
                             S_Point += Integer.parseInt(ArList.get(i).getLectureCredit());
                         }
+
+                        if (mParam2.equals("2015")) {
+                            AG_Sum_point = A_Point + B_Point + C_Point + D_Point + E_Point + F_Point;
+                        } else {
+                            AG_Sum_point = A_Point + B_Point + C_Point + D_Point + E_Point + F_Point + G_Point;
+                        }
+
+                        MS_Sum_Point = M_Point + S_Point;
+
                     }
                     break;
                 case "2016":
@@ -256,39 +309,72 @@ public class LecturePoint extends Fragment {
                             case "ZZA10008":
                             case "ZZA10009":
                             case "ZZA30005":
-                                공통역량필수 += Integer.parseInt(ArList.get(i).getLectureCredit());
-                                break;
-                            default:
-
-                                break;
+                                공통역량필수_point += Integer.parseInt(ArList.get(i).getLectureCredit());
                         }
                     }
-                    break;
                 case "2017":
                 case "2018":
                     if (ArList.get(i).getItemCheck()) {
                         switch (ArList.get(i).getLectureNum()) {
-                            case "ZZA10007":
-                            case "ZZA10008":
-                            case "ZZA10009":
-                            case "ZZA30005":
-                                공통역량필수 += Integer.parseInt(ArList.get(i).getLectureCredit());
+                            case "ZTA10001":
+                            case "ZTA10002":
+                            case "ZTA10003":
+                            case "ZTA10004":
+                                공통역량필수_point += Integer.parseInt(ArList.get(i).getLectureCredit());
                                 break;
+                            case "ZTA20001":
+                            case "ZTA20002":
+                            case "ZTA20003":
+                            case "ZTA20004":
+                            case "ZTA20005":
+                            case "ZTA20006":
+                            case "ZTA20007":
+                                공통역량선택_point += Integer.parseInt(ArList.get(i).getLectureCredit());
                             default:
                                 break;
                         }
+
+                        switch (ArList.get(i).getLectureType()) {
+                            case "문학과문화":
+                            case "역사와철학":
+                            case "인간과사회":
+                            case "생명과환경":
+                            case "과학과기술":
+                            case "예술과체육":
+                            case "융복합영역":
+
+                                if(ArList.get(i).getLectureType().equals("문학과문화")) {
+                                    문학과문화_point++;
+                                }
+                                else if(ArList.get(i).getLectureType().equals("역사와철학")) {
+                                    역사와철학_point++;
+                                }
+                                else if(ArList.get(i).getLectureType().equals("인간과사회")) {
+                                    인간과사회_point++;
+                                }
+                                else if(ArList.get(i).getLectureType().equals("생명과환경")) {
+                                    생명과환경_point++;
+                                }
+                                else if(ArList.get(i).getLectureType().equals("과학과기술")) {
+                                    과학과기술_point++;
+                                }
+                                else if(ArList.get(i).getLectureType().equals("예술과체육")) {
+                                    예술과체육_point++;
+                                }
+                                else if(ArList.get(i).getLectureType().equals("융복합영역")) {
+                                    융복합교과군_point++;
+                                }
+
+                                핵심교양_point += Integer.parseInt(ArList.get(i).getLectureCredit());
+                                break;
+                        }
+
+                        핵심교양수강횟수_point = 문학과문화_point + 역사와철학_point + 인간과사회_point
+                                + 생명과환경_point + 과학과기술_point + 예술과체육_point + 융복합교과군_point;
                     }
                     break;
             }
         }
-
-        if (mParam2.equals("2015")) {
-            AG_Sum_point = A_Point + B_Point + C_Point + D_Point + E_Point + F_Point;
-        } else {
-            AG_Sum_point = A_Point + B_Point + C_Point + D_Point + E_Point + F_Point + G_Point;
-        }
-
-        MS_Sum_Point = M_Point + S_Point;
     }
 
     private void ConnectDB(String year) {
@@ -319,6 +405,8 @@ public class LecturePoint extends Fragment {
                 break;
         }
         공통역량교양 = table[3][1];
+        공통역량선택교양 = table[4][1];
+        핵심교양 = table[5][1];
     }
 
     public void SettingCurriculum(){
@@ -350,13 +438,23 @@ public class LecturePoint extends Fragment {
             case "2017":
             case "2018":
                 KCC.setVisibility(View.GONE);
-                if(mParam2.equals("2016")){
-                    Text공통역량.setText("공통 : ");
+                if(!mParam2.equals("2016")){
+                    Text공통역량필수.setText("역량 필수 : ");
+                    Text공통역량선택.setText("역량 선택 : ");
                 }
-                else{
-                    Text공통역량.setText("역량 : ");
-                }
-                공통역량교양텍스트.setText("" + 공통역량필수 + " / " + 공통역량교양);
+                공통역량교양텍스트.setText("" + 공통역량필수_point + " / " + 공통역량교양);
+                공통역량선택텍스트.setText("" + 공통역량선택_point + " / " + 공통역량선택교양);
+                
+                문학과문화텍스트.setText("" + 문학과문화_point + " / 1");
+                역사와철학텍스트.setText("" + 역사와철학_point + " / 1");
+                인간과사회텍스트.setText("" + 인간과사회_point + " / 1");
+                생명과환경텍스트.setText("" + 생명과환경_point + " / 1");
+                과학과기술텍스트.setText("" + 과학과기술_point + " / 1");
+                예술과체육텍스트.setText("" + 예술과체육_point + " / 1");
+                융복합교과군텍스트.setText("" + 융복합교과군_point + " / 1");
+                핵심교양수강횟수텍스트.setText("" + 핵심교양수강횟수_point + " / 5");
+
+                핵심교양텍스트.setText("" + 핵심교양_point + " / " + 핵심교양);
                 break;
         }
     }

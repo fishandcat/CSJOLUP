@@ -235,7 +235,7 @@ public class CurriculumDB extends SQLiteOpenHelper {
      *  연도, 전필, 전선, A, B, C, D, E, F, G(2015년도는 없음), (A ~ G)합, M, S, (M, S)합, 졸업최소
      *
      *  2016 ~ [3][9]
-     *  연도, 전필, 전선, (공통,역량)필수, (공통,역량)선택, 핵심, 개척, 기초, 졸업최소
+     *  연도, 전필, 전선, (공통,역량)필수, (공통,역량)선택, (핵심, 통합), 개척, 기초, 졸업최소
      */
     public String[][] GetMinCredits(String year) {
         if (myDataBase == null)
