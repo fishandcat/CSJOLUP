@@ -52,6 +52,9 @@ public class LecturePoint extends Fragment {
     private String 공통역량교양;
     private String 공통역량선택교양;
     private String 핵심교양;
+    private String 개척교양;
+    private String 기초교양;
+    private String 졸업최소;
 
 
     private int ListSize; // 리스트 사이즈
@@ -70,6 +73,8 @@ public class LecturePoint extends Fragment {
     private int S_Point = 0;
     private int MS_Sum_Point = 0;
 
+    private int other_Point = 0;
+
     // 16 ~ 18 학번
     private int 공통역량필수_point = 0;
     private int 공통역량선택_point = 0;
@@ -83,7 +88,11 @@ public class LecturePoint extends Fragment {
     private int 융복합교과군_point = 0;
 
     private int 핵심교양수강횟수_point = 0;
-    private int 핵심교양_point  = 0;
+    private int 핵심교양_point = 0;
+
+    private int 개척교양_point = 0;
+    private int 기초교양_point = 0;
+    private int 기타교양_point = 0;
 
     // 12 ~ 15 학번
     private TextView TextA;
@@ -99,6 +108,8 @@ public class LecturePoint extends Fragment {
     private TextView TextM;
     private TextView TextS;
     private TextView TextMS_Sum; // BSM
+
+    private TextView TextOther; // 기타 교양
 
     // 16 ~ 18 학번
     private TextView Text공통역량필수; // 공통, 역량을 표기하는 텍스트
@@ -116,26 +127,31 @@ public class LecturePoint extends Fragment {
     private TextView 융복합교과군텍스트;
 
     private TextView 핵심교양수강횟수텍스트;
-    private TextView Text핵심교양;
     private TextView 핵심교양텍스트;
+
+    private TextView 개척교양텍스트;
+
+    private TextView 기초교양텍스트;
+
+    private TextView 기타교양텍스트;
 
     private ArrayList<Lecture> ArList;
 
     private CurriculumDB db;
 
     private View view4;
+    private View view개척;
 
     private LinearLayout KCC;
     private LinearLayout NoneKCC;
     private LinearLayout LinearLayG;
-
-    private Liberal_arts liberalArts;
+    private LinearLayout LinearLay개척;
 
     public LecturePoint() {
         // Required empty public constructor
     }
 
-    public Lecture getItem(int position){
+    public Lecture getItem(int position) {
         return ArList.get(position);
     }
 
@@ -186,11 +202,13 @@ public class LecturePoint extends Fragment {
         TextF = (TextView) view.findViewById(R.id.textF);
         TextG = (TextView) view.findViewById(R.id.textG);
         TextSum = (TextView) view.findViewById(R.id.textSUM);
-        TextAG_Sum = (TextView)  view.findViewById(R.id.textAG_SUM);
+        TextAG_Sum = (TextView) view.findViewById(R.id.textAG_SUM);
 
         TextM = (TextView) view.findViewById(R.id.textM);
         TextS = (TextView) view.findViewById(R.id.textS);
         TextMS_Sum = (TextView) view.findViewById(R.id.textMS_SUM);
+
+        TextOther = (TextView) view.findViewById(R.id.textOther);
 
         Text공통역량필수 = (TextView) view.findViewById(R.id.text공통역량필수);
         공통역량교양텍스트 = (TextView) view.findViewById(R.id.공통역량필수);
@@ -207,14 +225,19 @@ public class LecturePoint extends Fragment {
         융복합교과군텍스트 = (TextView) view.findViewById(R.id.융복합교과군);
 
         핵심교양수강횟수텍스트 = (TextView) view.findViewById(R.id.핵심교양수강횟수);
-        Text핵심교양 = (TextView) view.findViewById(R.id.text핵심교양);
         핵심교양텍스트 = (TextView) view.findViewById(R.id.핵심교양);
 
+        개척교양텍스트 = (TextView) view.findViewById(R.id.text개척교양);
+        기초교양텍스트 = (TextView) view.findViewById(R.id.text기초교양);
+        기타교양텍스트 = (TextView) view.findViewById(R.id.textNonKCCOther);
+
         view4 = (View) view.findViewById(R.id.view4);
+        view개척 = (View) view.findViewById(R.id.view개척교양);
 
         KCC = (LinearLayout) view.findViewById(R.id.KCC);
         NoneKCC = (LinearLayout) view.findViewById(R.id.NoneKCC);
         LinearLayG = (LinearLayout) view.findViewById(R.id.LinerG);
+        LinearLay개척 = (LinearLayout) view.findViewById(R.id.Linear개척교양);
 
         SettingCurriculum();
 
@@ -260,13 +283,17 @@ public class LecturePoint extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    public void Lecturepointsum() {
-        ArList = liberalArts.getList();
+    public void Lecturepointsum(){
+        Lecturepointsum(mParam2);
+    }
+
+    public void Lecturepointsum(String year) {
+        ArList = Liberal_arts.getList();
         ListSize = ArList.size();
 
         for (int i = 0; i < ListSize; i++) {
 
-            switch (mParam2) {
+            switch (year) {
                 case "2012":
                 case "2013":
                 case "2014":
@@ -290,9 +317,11 @@ public class LecturePoint extends Fragment {
                             M_Point += Integer.parseInt(ArList.get(i).getLectureCredit());
                         } else if (ArList.get(i).getLectureType().contains("S")) {
                             S_Point += Integer.parseInt(ArList.get(i).getLectureCredit());
+                        } else {
+                            other_Point += Integer.parseInt(ArList.get(i).getLectureCredit());
                         }
 
-                        if (mParam2.equals("2015")) {
+                        if (year.equals("2015")) {
                             AG_Sum_point = A_Point + B_Point + C_Point + D_Point + E_Point + F_Point;
                         } else {
                             AG_Sum_point = A_Point + B_Point + C_Point + D_Point + E_Point + F_Point + G_Point;
@@ -330,7 +359,6 @@ public class LecturePoint extends Fragment {
                             case "ZTA20006":
                             case "ZTA20007":
                                 공통역량선택_point += Integer.parseInt(ArList.get(i).getLectureCredit());
-                            default:
                                 break;
                         }
 
@@ -343,45 +371,60 @@ public class LecturePoint extends Fragment {
                             case "예술과체육":
                             case "융복합영역":
 
-                                if(ArList.get(i).getLectureType().equals("문학과문화")) {
+                                if (ArList.get(i).getLectureType().equals("문학과문화")) {
                                     문학과문화_point++;
-                                }
-                                else if(ArList.get(i).getLectureType().equals("역사와철학")) {
+                                } else if (ArList.get(i).getLectureType().equals("역사와철학")) {
                                     역사와철학_point++;
-                                }
-                                else if(ArList.get(i).getLectureType().equals("인간과사회")) {
+                                } else if (ArList.get(i).getLectureType().equals("인간과사회")) {
                                     인간과사회_point++;
-                                }
-                                else if(ArList.get(i).getLectureType().equals("생명과환경")) {
+                                } else if (ArList.get(i).getLectureType().equals("생명과환경")) {
                                     생명과환경_point++;
-                                }
-                                else if(ArList.get(i).getLectureType().equals("과학과기술")) {
+                                } else if (ArList.get(i).getLectureType().equals("과학과기술")) {
                                     과학과기술_point++;
-                                }
-                                else if(ArList.get(i).getLectureType().equals("예술과체육")) {
+                                } else if (ArList.get(i).getLectureType().equals("예술과체육")) {
                                     예술과체육_point++;
-                                }
-                                else if(ArList.get(i).getLectureType().equals("융복합영역")) {
+                                } else if (ArList.get(i).getLectureType().equals("융복합영역")) {
                                     융복합교과군_point++;
                                 }
 
                                 핵심교양_point += Integer.parseInt(ArList.get(i).getLectureCredit());
+                                핵심교양수강횟수_point = 문학과문화_point + 역사와철학_point + 인간과사회_point
+                                        + 생명과환경_point + 과학과기술_point + 예술과체육_point + 융복합교과군_point;
+                                break;
+                            // 개척교양
+                            case "진로/취업":
+                            case "창업/산학협력":
+                            case "기타":
+                                개척교양_point += Integer.parseInt(ArList.get(i).getLectureCredit());;
+                                break;
+                            // 기초교양
+                            case "외국어계열":
+                            case "인문사회계열":
+                            case "자연계열":
+                            case "선이수교과":
+                                기초교양_point += Integer.parseInt(ArList.get(i).getLectureCredit());;
+                                break;
+                            case "교직":
+                                // TODO: 여기에 교직관련 추가
+                            default:
+                                기타교양_point += Integer.parseInt(ArList.get(i).getLectureCredit());
                                 break;
                         }
 
-                        핵심교양수강횟수_point = 문학과문화_point + 역사와철학_point + 인간과사회_point
-                                + 생명과환경_point + 과학과기술_point + 예술과체육_point + 융복합교과군_point;
+//                        핵심교양수강횟수_point = 문학과문화_point + 역사와철학_point + 인간과사회_point
+//                                + 생명과환경_point + 과학과기술_point + 예술과체육_point + 융복합교과군_point;
+
                     }
+
                     break;
-            }
+            } // year
         }
     }
 
     private void ConnectDB(String year) {
 
         String[][] table = db.GetMinCredits(year);
-        switch (year)
-        {
+        switch (year) {
             case "2012":
             case "2013":
             case "2014":
@@ -398,25 +441,28 @@ public class LecturePoint extends Fragment {
                 M = table[11][1];
                 S = table[12][1];
                 BSM_SUM = table[13][1];
+                졸업최소 = table[14][1];
                 break;
             case "2016":
             case "2017":
             case "2018":
+                공통역량교양 = table[3][1];
+                공통역량선택교양 = table[4][1];
+                핵심교양 = table[5][1];
+                개척교양 = table[6][1];
+                기초교양 = table[7][1];
+                졸업최소 = table[8][1];
                 break;
         }
-        공통역량교양 = table[3][1];
-        공통역량선택교양 = table[4][1];
-        핵심교양 = table[5][1];
     }
 
-    public void SettingCurriculum(){
-        switch (mParam2)
-        {
+    public void SettingCurriculum() {
+        switch (mParam2) {
             case "2012":
             case "2013":
             case "2014":
             case "2015":
-                if(mParam2.equals("2015")){
+                if (mParam2.equals("2015")) {
                     view4.setVisibility(View.GONE);
                     LinearLayG.setVisibility(View.GONE);
                     TextSum.setText("A ~ F 합 : ");
@@ -433,18 +479,22 @@ public class LecturePoint extends Fragment {
                 TextM.setText("" + M_Point + " / " + M);
                 TextS.setText("" + S_Point + " / " + S);
                 TextMS_Sum.setText("" + MS_Sum_Point + " / " + BSM_SUM);
+                TextOther.setText(String.format("%d", other_Point));
                 break;
             case "2016":
             case "2017":
             case "2018":
                 KCC.setVisibility(View.GONE);
-                if(!mParam2.equals("2016")){
+                if (!mParam2.equals("2016")) {
                     Text공통역량필수.setText("역량 필수 : ");
                     Text공통역량선택.setText("역량 선택 : ");
+                } else {
+                    LinearLay개척.setVisibility(View.GONE);
+                    view개척.setVisibility(View.GONE);
                 }
                 공통역량교양텍스트.setText("" + 공통역량필수_point + " / " + 공통역량교양);
                 공통역량선택텍스트.setText("" + 공통역량선택_point + " / " + 공통역량선택교양);
-                
+
                 문학과문화텍스트.setText("" + 문학과문화_point + " / 1");
                 역사와철학텍스트.setText("" + 역사와철학_point + " / 1");
                 인간과사회텍스트.setText("" + 인간과사회_point + " / 1");
@@ -455,7 +505,34 @@ public class LecturePoint extends Fragment {
                 핵심교양수강횟수텍스트.setText("" + 핵심교양수강횟수_point + " / 5");
 
                 핵심교양텍스트.setText("" + 핵심교양_point + " / " + 핵심교양);
+
+                개척교양텍스트.setText(String.format("%d / %s", 개척교양_point, 개척교양));
+                기초교양텍스트.setText(String.format("%d / %s", 기초교양_point, 기초교양));
+                기타교양텍스트.setText(String.format("%d ", 기타교양_point));
+
                 break;
         }
+    }
+
+    public ArrayList<String> getPoints(String year, Context ctx) {
+        ArrayList<String> temp = new ArrayList<>();
+        db = new CurriculumDB(ctx);
+        ConnectDB(year);
+
+        int 총합;
+
+        if (year.compareTo("2016") < 0) {
+            // KCC
+            총합 = AG_Sum_point + MS_Sum_Point + other_Point;
+        } else {
+            // NON KCC
+            총합 = 공통역량필수_point + 공통역량선택_point + 핵심교양_point +
+                    개척교양_point + 기초교양_point + 기타교양_point;
+        }
+        temp.add("" + 총합);
+        temp.add("교양");
+        temp.add(졸업최소);
+
+        return temp;
     }
 }

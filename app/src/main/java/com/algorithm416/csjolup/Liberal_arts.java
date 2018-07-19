@@ -261,6 +261,7 @@ public class Liberal_arts extends Fragment {
                     listView.setVisibility(View.GONE);
                     searchView.setVisibility(View.VISIBLE);
                     if (searchText.getText().toString().length() == 0) {
+                        listSearch.clear();
                         listSearch.addAll(listLectures);
                         searchAdapter.notifyDataSetChanged();
                     }

@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.data.PieEntry;
+
 import java.util.ArrayList;
 
 
@@ -41,6 +43,7 @@ public class Grades extends Fragment {
     public Grades() {
         // Required empty public constructor
     }
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -68,9 +71,10 @@ public class Grades extends Fragment {
         }
 
         pagerAdapter = new SectionsPagerAdapter(getFragmentManager(), mParam1, mParam2);
+
+        pagerAdapter.insertItem("JolupPoint");
         pagerAdapter.insertItem("MajorPoint");
         pagerAdapter.insertItem("LecturePoint");
-        pagerAdapter.insertItem("JolupPoint");
     }
 
     @Override
@@ -82,28 +86,31 @@ public class Grades extends Fragment {
 
         viewPager = (ViewPager) view.findViewById(R.id.GradesPager);
 
+        ArrayList<String> temp = new ArrayList<>();
+        MajorPoint mp = new MajorPoint();
+        mp.Majorpointsum();
+        LecturePoint lp = new LecturePoint();
+        lp.Lecturepointsum(mParam2);
+
+        temp.addAll(mp.getPoints());
+        temp.addAll(lp.getPoints(mParam2, getContext()));
+
+        JolupPoint.pieEntries.clear();
+        int entry[] = new int[3];
+        for (int i = 0, k = 0; i < temp.size() - 1; i += 2) {
+            entry[k] = Integer.parseInt(temp.get(i));
+            JolupPoint.pieEntries.add(new PieEntry(entry[k++], temp.get(i + 1)));
+        }
+
+        final int graduate = Integer.parseInt(temp.get(temp.size() - 1));
+        int sum = graduate - (entry[0] + entry[1] + entry[2]);
+        if (sum > 0) {
+            JolupPoint.pieEntries.add(new PieEntry(sum, "남은 학점"));
+        }
+
         viewPager.setAdapter(pagerAdapter);
         viewPager.setOffscreenPageLimit(2);
         viewPager.setCurrentItem(0);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int i, float v, int i1) {
-
-            }
-
-            @Override
-            public void onPageSelected(int i) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {
-
-            }
-        });
-
-        viewPager.destroyDrawingCache();
-        pagerAdapter.notifyDataSetChanged();
 
         return view;
     }

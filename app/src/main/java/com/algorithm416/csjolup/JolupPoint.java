@@ -1,15 +1,26 @@
 package com.algorithm416.csjolup;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
+
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -39,6 +50,9 @@ public class JolupPoint extends Fragment {
     private ArrayList<Lecture> ArList;
 
     private CurriculumDB db;
+
+    public static List<PieEntry> pieEntries = new ArrayList<>();
+    public static PieChart pieChart;
 
     public JolupPoint() {
         // Required empty public constructor
@@ -80,7 +94,34 @@ public class JolupPoint extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_jolup_point, container, false);
+        View view = inflater.inflate(R.layout.fragment_jolup_point, container, false);
+
+        PieDataSet pieDataSet = new PieDataSet(pieEntries,"이수 대상");
+        pieDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+        pieDataSet.setValueTextSize(25);
+        pieDataSet.setValueTextColor(Color.WHITE);
+        pieDataSet.setSliceSpace(3f);
+
+        PieData pieData = new PieData(pieDataSet);
+
+        pieChart = (PieChart) view.findViewById(R.id.PieChart);
+        pieChart.setData(pieData);
+        pieChart.setCenterTextSize(25);
+        pieChart.setCenterTextColor(Color.DKGRAY);
+        pieChart.getDescription().setEnabled(false);
+        pieChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        pieChart.getLegend().setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        pieChart.getLegend().setOrientation(Legend.LegendOrientation.VERTICAL);
+        pieChart.getLegend().setTextSize(18);
+        pieChart.setEntryLabelTextSize(18);
+        if (mParam2.compareTo("2016") < 0) {
+            pieChart.setCenterText(mParam2 + "년 교육과정\n졸업 학점 : " + db.GetMinCredits(mParam2)[14][1]);
+        } else {
+            pieChart.setCenterText(mParam2 + "년 교육과정\n졸업 학점 : " + db.GetMinCredits(mParam2)[8][1]);
+        }
+
+        pieChart.invalidate();
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

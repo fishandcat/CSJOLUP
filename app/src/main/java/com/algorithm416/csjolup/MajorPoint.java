@@ -43,9 +43,6 @@ public class MajorPoint extends Fragment {
     private TextView 전필텍스트;
     private TextView 전선텍스트;
 
-    private Lecture lecture;
-    private Major major;
-
     private ArrayList<Lecture> ArList;
 
     private CurriculumDB db;
@@ -144,18 +141,17 @@ public class MajorPoint extends Fragment {
     }
 
     public void Majorpointsum(){
-        ArList = major.getList();
+        ArList = Major.getList();
         ListSize = ArList.size();
 
         for(int i = 0; i < ListSize; i++) {
-
-            if(ArList.get(i).getItemCheck()) {
-
-                if(ArList.get(i).getLectureType().contains("전필")) {
-                    전필 += Integer.parseInt(ArList.get(i).getLectureCredit());
-                }
-                else if(ArList.get(i).getLectureType().contains("전선")){
-                    전선 += Integer.parseInt(ArList.get(i).getLectureCredit());
+            if (ArList.get(i).isLecture()) {
+                if (ArList.get(i).getItemCheck()) {
+                    if (ArList.get(i).getLectureType().contains("전필")) {
+                        전필 += Integer.parseInt(ArList.get(i).getLectureCredit());
+                    } else if (ArList.get(i).getLectureType().contains("전선")) {
+                        전선 += Integer.parseInt(ArList.get(i).getLectureCredit());
+                    }
                 }
             }
         }
@@ -170,9 +166,18 @@ public class MajorPoint extends Fragment {
 
     public void SettingCurriculum(){
         전필텍스트.setText(""+ 전필 + " / " + 전필최소);
-        전필 = 0;
 
         전선텍스트.setText(""+ 전선 + " / " + 전선최소);
-        전선 = 0;
+    }
+
+    public ArrayList<String> getPoints(){
+        ArrayList<String> temp = new ArrayList<>();
+
+        temp.add("" + 전필);
+        temp.add("전필");
+        temp.add("" + 전선);
+        temp.add("전선");
+
+        return temp;
     }
 }
