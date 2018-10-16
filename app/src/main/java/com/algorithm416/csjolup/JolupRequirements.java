@@ -33,14 +33,17 @@ public class JolupRequirements extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private ArrayAdapter<CharSequence> adjoup1, adjoup2, adjoup3, adjoup4;   // 스피너 어뎁터
+    private ArrayAdapter<CharSequence> adjoup1, adjoup2, adjoup3, adjoup4, adjoup5;   // 스피너 어뎁터
 
     private Spinner jolsp1;         // 사회봉사 스피너
     private Spinner jolsp2;         // 글로벌 리더쉽 스피너
     private Spinner jolsp3;         // 독서 스피너
     private Spinner jolsp4;         // GNU인성 스피너
+    private Spinner jolsp5;         // 꿈/미래개척
 
     private curriculum curriculum;
+
+    static public int[] selection = new int[5];
 
     public JolupRequirements() {
         // Required empty public constructor
@@ -85,6 +88,7 @@ public class JolupRequirements extends Fragment {
         jolsp2 = (Spinner) view.findViewById(R.id.Jolupsp2);
         jolsp3 = (Spinner) view.findViewById(R.id.Jolupsp3);
         jolsp4 = (Spinner) view.findViewById(R.id.Jolupsp4);
+        jolsp5 = (Spinner) view.findViewById(R.id.Jolupsp5);
 
         adjoup1 = ArrayAdapter.createFromResource(this.getActivity(), R.array.jolup1, android.R.layout.simple_spinner_item);
         adjoup1.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
@@ -93,7 +97,7 @@ public class JolupRequirements extends Fragment {
         jolsp1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
+                selection[0] = i;
             }
 
             @Override
@@ -109,7 +113,7 @@ public class JolupRequirements extends Fragment {
         jolsp2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
+                selection[1] = i;
             }
 
             @Override
@@ -125,7 +129,7 @@ public class JolupRequirements extends Fragment {
         jolsp3.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
+                selection[2] = i;
             }
 
             @Override
@@ -137,11 +141,10 @@ public class JolupRequirements extends Fragment {
         adjoup4 = ArrayAdapter.createFromResource(this.getActivity(), R.array.jolup4, android.R.layout.simple_spinner_item);
         adjoup4.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         jolsp4.setAdapter(adjoup4);
-
         jolsp4.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
+                selection[3] = i;
             }
 
             @Override
@@ -149,6 +152,27 @@ public class JolupRequirements extends Fragment {
 
             }
         });
+
+        adjoup5 = ArrayAdapter.createFromResource(this.getActivity(), R.array.jolup5, android.R.layout.simple_spinner_item);
+        adjoup5.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        jolsp5.setAdapter(adjoup5);
+        jolsp5.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selection[4] = i;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        jolsp1.setSelection(selection[0]);
+        jolsp2.setSelection(selection[1]);
+        jolsp3.setSelection(selection[2]);
+        jolsp4.setSelection(selection[3]);
+        jolsp5.setSelection(selection[4]);
 
         return view;
     }

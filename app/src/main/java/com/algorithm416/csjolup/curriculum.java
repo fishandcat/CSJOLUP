@@ -101,31 +101,6 @@ public class curriculum extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_curriculum, container, false);
 
-        view.setFocusableInTouchMode(true);
-        view.requestFocus();
-        view.setOnKeyListener(new View.OnKeyListener() {
-            // 뒤로가기 버튼 기능
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if(event.getAction() == KeyEvent.ACTION_DOWN) {
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        if (inputMethodManager.isActive())
-                            return true;
-//                        if (CurriView.getVisibility() == View.VISIBLE) {
-//                            getActivity().onBackPressed();
-//                            return false;
-//                        } else {
-//                            Changefrag.setVisibility(View.GONE);
-//                            CurriView.setVisibility(View.VISIBLE);
-//                        }
-                    }
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        });
-
         Changefrag = (FrameLayout) view.findViewById(R.id.fragment);
         CurriView = (RelativeLayout) view.findViewById(R.id.CurriView);
 
