@@ -22,11 +22,15 @@ public class Setting extends AppCompatActivity {
         switch (v.getId()) {
             case R.id.button:
                 SaveXML xml = new SaveXML(this);
-                xml.clear();
+
                 Intent intent = new Intent(mainActivity).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
+                Major.getList().clear();
+                Liberal_arts.getList().clear();
+                for (int i = 0; i < JolupRequirements.selection.length; i++)
+                    JolupRequirements.selection[i] = 0;
+                MainActivity.bBtnSave = false;
+                xml.clear();
                 startActivity(intent);
-
                 finish();
                 break;
         }

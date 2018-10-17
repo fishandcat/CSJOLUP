@@ -93,7 +93,7 @@ public class SaveXML {
         SharedPreferences pref = context.getSharedPreferences(filename, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.clear();
-        //editor.commit(); 대신 apply 로
+        editor.commit(); //대신 apply 로
         editor.apply();
     }
 }

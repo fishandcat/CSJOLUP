@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private boolean spinerCheck1 = false;
     private boolean spinerCheck2 = false;
+    static public boolean bBtnSave = false;
 
     private Intent settingintent;               // 세팅 엑티비티 인텐트
 
@@ -296,6 +297,7 @@ public class MainActivity extends AppCompatActivity implements
                     CurriculumText.setText(SaveCurriculum + " 교육과정");
                     currfragment = curriculum.newInstance(SaveMajor,SaveCurriculum);
                     grades = Grades.newInstance(SaveMajor,SaveCurriculum);
+                    bBtnSave = true;
                     getSupportFragmentManager()
                             .beginTransaction()
                             .replace(R.id.Fragment, currfragment).commit();
@@ -474,7 +476,7 @@ public class MainActivity extends AppCompatActivity implements
 
         xml.clear();
 
-        if (SaveMajor != null || SaveCurriculum != null) {
+        if (!SaveMajor.isEmpty() && !SaveCurriculum.isEmpty() && bBtnSave) {
             String[] CurriculumYear = new String[2];
             CurriculumYear[0] = SaveMajor;
             CurriculumYear[1] = SaveCurriculum;
