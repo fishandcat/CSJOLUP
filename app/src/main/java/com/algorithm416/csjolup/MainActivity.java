@@ -267,6 +267,7 @@ public class MainActivity extends AppCompatActivity implements
                 nJolupRequirement[i] = Integer.parseInt(temp.get(i));
             }
 
+            bBtnSave = true;
 
             ScreenView.setVisibility(View.GONE);
             DrLay.setVisibility(View.VISIBLE);
@@ -283,6 +284,8 @@ public class MainActivity extends AppCompatActivity implements
         // 툴바 메뉴 추가
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.menuicon_w);
+
     }
 
     @Override
