@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ScaleDrawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
@@ -21,23 +20,25 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.graphics.drawable.DrawerArrowDrawable;
+import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewParent;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.time.Instant;
 import java.util.ArrayList;
+
+
 
 /*
 *   TODO: 내일할일
@@ -69,12 +70,18 @@ public class MainActivity extends AppCompatActivity implements
     private ConstraintLayout ScreenView;        // 컨스트레인 레이아웃
     private Spinner MajorSpin;                  // 전공 스피너
     private Spinner CurriculumSpin;             // 교육과정 스피너
+
+    private Toolbar myToolbar;
+
+    private CheckBox checkBox;
+
     private String SaveMajor = "";              // 선택한 전공 저장
     private String SaveCurriculum = "";         // 선택한 교육과정 저장
 
     private boolean spinerCheck1 = false;
     private boolean spinerCheck2 = false;
     static public boolean bBtnSave = false;
+    static public boolean TeachingCheck = false;
 
     private Intent settingintent;               // 세팅 엑티비티 인텐트
 
@@ -128,9 +135,12 @@ public class MainActivity extends AppCompatActivity implements
         MajorText = (TextView) Heder.findViewById(R.id.majortext);
         CurriculumText = (TextView) Heder.findViewById(R.id.curriculumtext);
 
+        myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+
+        checkBox = (CheckBox) findViewById(R.id.TeachingCheck);
+
         sp = getSharedPreferences("savefile", MODE_PRIVATE);
         editor = sp.edit();
-
 
         DrLay.setVisibility(View.GONE);
 
@@ -162,12 +172,6 @@ public class MainActivity extends AppCompatActivity implements
                 DrLay.closeDrawer(listView);
             }
         });
-
-        /*// 네비게이션 드로우 토글 아이콘
-        DrLay = (DrawerLayout) findViewById(R.id.screenView);
-        ActBarDraTog = new ActionBarDrawerToggle(MainActivity.this, DrLay, R.drawable, R.string.app_name, R.string.app_name);
-        DrLay.setDrawerListener(ActBarDraTog);
-        */
 
         // 전공 스피너
         adMajorSpin = ArrayAdapter.createFromResource(MainActivity.this, R.array.major_names, android.R.layout.simple_spinner_dropdown_item);
@@ -251,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements
                 nJolupRequirement[i] = Integer.parseInt(temp.get(i));
             }
 
-
+            bBtnSave = true;
             ScreenView.setVisibility(View.GONE);
             DrLay.setVisibility(View.VISIBLE);
             Toast.makeText(MainActivity.this, "불러오기 완료!", Toast.LENGTH_SHORT).show();
@@ -263,6 +267,12 @@ public class MainActivity extends AppCompatActivity implements
                     .beginTransaction()
                     .replace(R.id.Fragment, currfragment).commit();
         }
+
+        // 툴바 메뉴추가
+        setSupportActionBar(myToolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 
     @Override
@@ -275,15 +285,23 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public  boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
-
             case R.id.action_setting:
                 settingintent.putExtra("MainActivity", this.getIntent());
                 startActivity(settingintent);
+                return true;
+            case android.R.id.home:
+                if(bBtnSave) {
+                    if (!DrLay.isDrawerOpen(Gravity.LEFT))
+                        DrLay.openDrawer(Gravity.LEFT);
+                    else
+                        DrLay.closeDrawer(Gravity.LEFT);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
 
     public void onClick (View v) {
 
@@ -293,6 +311,14 @@ public class MainActivity extends AppCompatActivity implements
                     ScreenView.setVisibility(View.GONE);
                     DrLay.setVisibility(View.VISIBLE);
                     Toast.makeText(MainActivity.this, "저장완료!", Toast.LENGTH_SHORT).show();
+                    if(checkBox.isChecked()) {
+                        TeachingCheck = true;
+                        checkBox.setChecked(true);
+                    }
+                    else{
+                        TeachingCheck = false;
+                        checkBox.setChecked(false);
+                    }
                     MajorText.setText(SaveMajor);
                     CurriculumText.setText(SaveCurriculum + " 교육과정");
                     currfragment = curriculum.newInstance(SaveMajor,SaveCurriculum);
@@ -353,7 +379,6 @@ public class MainActivity extends AppCompatActivity implements
                     alertDialog.show();
                 }
                 break;
-
         }
     }
 

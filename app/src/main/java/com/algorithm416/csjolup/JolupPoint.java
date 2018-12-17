@@ -87,7 +87,6 @@ public class JolupPoint extends Fragment {
         db = new CurriculumDB(getContext());
 
         ConnectDB(mParam2);
-
     }
 
     @Override
@@ -98,22 +97,22 @@ public class JolupPoint extends Fragment {
 
         PieDataSet pieDataSet = new PieDataSet(pieEntries,"이수 대상");
         pieDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
-        pieDataSet.setValueTextSize(25);
+        pieDataSet.setValueTextSize(12);
         pieDataSet.setValueTextColor(Color.WHITE);
-        pieDataSet.setSliceSpace(3f);
+        pieDataSet.setSliceSpace(5f);
 
         PieData pieData = new PieData(pieDataSet);
 
         pieChart = (PieChart) view.findViewById(R.id.PieChart);
         pieChart.setData(pieData);
-        pieChart.setCenterTextSize(25);
+        pieChart.setCenterTextSize(18);
         pieChart.setCenterTextColor(Color.DKGRAY);
         pieChart.getDescription().setEnabled(false);
         pieChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
         pieChart.getLegend().setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
         pieChart.getLegend().setOrientation(Legend.LegendOrientation.VERTICAL);
-        pieChart.getLegend().setTextSize(18);
-        pieChart.setEntryLabelTextSize(18);
+        pieChart.getLegend().setTextSize(12);
+        pieChart.setEntryLabelTextSize(12);
         if (mParam2.compareTo("2016") < 0) {
             pieChart.setCenterText(mParam2 + "년 교육과정\n졸업 학점 : " + db.GetMinCredits(mParam2)[14][1]);
         } else {

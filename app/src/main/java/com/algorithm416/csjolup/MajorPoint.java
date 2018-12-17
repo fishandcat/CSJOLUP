@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 
@@ -39,13 +41,23 @@ public class MajorPoint extends Fragment {
     private int 전필 = 0;
     private int 전선 = 0;
     private int 교직 = 0;
+    private String [] listJolup1;
+    private String [] listJolup2;
+    private String [] listJolup3;
+    private String [] listJolup4;
+
+    private boolean bJolup = false;
 
     private TextView 전필텍스트;
     private TextView 전선텍스트;
+    private TextView 졸업텍스트;
+    private TextView 꿈미래텍스트;
 
     private ArrayList<Lecture> ArList;
 
     private CurriculumDB db;
+
+    private JolupRequirements jolupRequirements;
 
     public MajorPoint() {
         // Required empty public constructor
@@ -82,6 +94,11 @@ public class MajorPoint extends Fragment {
         }
         db = new CurriculumDB(getContext());
 
+        listJolup1 = getResources().getStringArray(R.array.jolup1);
+        listJolup2 = getResources().getStringArray(R.array.jolup2);
+        listJolup3 = getResources().getStringArray(R.array.jolup3);
+        listJolup4 = getResources().getStringArray(R.array.jolup4);
+
         ConnectDB(mParam2);
 
         Majorpointsum();
@@ -95,6 +112,8 @@ public class MajorPoint extends Fragment {
 
         전필텍스트 = (TextView) view.findViewById(R.id.전필텍스트);
         전선텍스트 = (TextView) view.findViewById(R.id.전선텍스트);
+        졸업텍스트 = (TextView) view.findViewById(R.id.졸업텍스트);
+        꿈미래텍스트 = (TextView) view.findViewById(R.id.꿈미래텍스트);
 
         SettingCurriculum();
 
@@ -165,9 +184,122 @@ public class MajorPoint extends Fragment {
     }
 
     public void SettingCurriculum(){
+        boolean jolup1 = false;
+        boolean jolup2 = false;
+        boolean jolup3 = false;
+        boolean jolup4 = false;
+
         전필텍스트.setText(""+ 전필 + " / " + 전필최소);
 
         전선텍스트.setText(""+ 전선 + " / " + 전선최소);
+
+        switch (JolupRequirements.selection[0]){
+            case 0:
+                break;
+            case 1:
+                졸업텍스트.setText(listJolup1[1]);
+                jolup1 = true;
+                break;
+            case 2:
+                졸업텍스트.setText(listJolup1[2]);
+                jolup1 = true;
+                break;
+            case 3:
+                졸업텍스트.setText(listJolup1[3]);
+                jolup1 = true;
+                break;
+        }
+
+        switch (JolupRequirements.selection[1]){
+            case 0:
+                break;
+            case 1:
+                졸업텍스트.setText(listJolup2[1]);
+                jolup2 = true;
+                break;
+            case 2:
+                졸업텍스트.setText(listJolup2[2]);
+                jolup2 = true;
+                break;
+            case 3:
+                졸업텍스트.setText(listJolup2[3]);
+                jolup2 = true;
+                break;
+            case 4:
+                졸업텍스트.setText(listJolup2[4]);
+                jolup2 = true;
+                break;
+            case 5:
+                졸업텍스트.setText(listJolup2[5]);
+                jolup2 = true;
+                break;
+        }
+
+        switch (JolupRequirements.selection[2]){
+            case 0:
+                break;
+            /*case 1:
+                졸업텍스트.setText(listJolup3[1]);
+                break;
+            case 2:
+                졸업텍스트.setText(listJolup3[2]);
+                break;
+            case 3:
+                졸업텍스트.setText(listJolup3[3]);
+                break;
+            case 4:
+                졸업텍스트.setText(listJolup3[4]);
+                break;
+            case 5:
+                졸업텍스트.setText(listJolup3[5]);
+                break;
+            case 6:
+                졸업텍스트.setText(listJolup3[6]);
+                break;
+            case 7:
+                졸업텍스트.setText(listJolup3[7]);
+                break;*/
+            case 8:
+                졸업텍스트.setText("독서인증완료!!");
+                jolup3 = true;
+                break;
+        }
+
+        switch (JolupRequirements.selection[3]){
+            case 0:
+                break;
+            case 1:
+                졸업텍스트.setText(listJolup4[1]);
+                jolup4 = true;
+                break;
+            case 2:
+                졸업텍스트.setText(listJolup4[2]);
+                jolup4 = true;
+                break;
+        }
+
+        if(!jolup1 && !jolup2 && !jolup3 && !jolup4){
+            졸업텍스트.setText("졸업조건 이수가 필요합니다!!");
+        }
+
+        if((jolup1 && jolup2) || (jolup1 && jolup3) || (jolup1 && jolup4) || (jolup2 && jolup3) || (jolup2 && jolup4) || (jolup3 && jolup4)) {
+            졸업텍스트.setText("졸업조건 이수완료!!");
+        }
+
+        switch (mParam2){
+            case "2012":
+                꿈미래텍스트.setText(JolupRequirements.selection[4] + " /  1");
+                break;
+            case "2013":
+                꿈미래텍스트.setText(JolupRequirements.selection[4] + " /  2");
+                break;
+            case "2014":
+                꿈미래텍스트.setText(JolupRequirements.selection[4] + " /  3");
+                break;
+                default:
+                    꿈미래텍스트.setText(JolupRequirements.selection[4] +" /  4");
+                    break;
+        }
     }
 
     public ArrayList<String> getPoints(){

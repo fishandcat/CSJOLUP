@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
+    android:background="#EEEEEE"
     tools:context=".Liberal_arts">
 
     <!-- TODO: Update blank fragment layout -->

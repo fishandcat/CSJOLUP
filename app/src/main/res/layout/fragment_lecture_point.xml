@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#EEEEEE"
     tools:context=".LecturePoint">
 
     <!-- TODO: Update blank fragment layout -->
@@ -11,7 +12,8 @@
         android:id="@+id/KCC"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="visible">
 
         <View
             android:id="@+id/view"

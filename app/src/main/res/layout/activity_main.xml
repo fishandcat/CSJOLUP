@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#EEEEEE"
     tools:context=".MainActivity">
 
     <android.support.constraint.ConstraintLayout
@@ -22,6 +23,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
+            android:layout_margin="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
@@ -118,6 +120,19 @@
                 android:layout_centerInParent="true"
                 android:background="#87CEFA"/>
 
+            <CheckBox
+                android:id="@+id/TeachingCheck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="교직이수"
+                android:layout_gravity="center"
+                android:layout_weight="0.2"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.551"/>
+
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -146,6 +161,15 @@
 
     </android.support.constraint.ConstraintLayout>
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="2dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/DrawListView"
         android:layout_width="match_parent"
@@ -155,6 +179,7 @@
             android:id="@+id/Fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
         </FrameLayout>
 
         <ListView
