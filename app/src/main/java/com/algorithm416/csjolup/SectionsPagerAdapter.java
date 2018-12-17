@@ -1,7 +1,6 @@
 package com.algorithm416.csjolup;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -51,6 +50,9 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
                 break;
             case "JolupPoint" :
                 fr = JolupPoint.newInstance(mParam1, mParam2);
+                break;
+            case "TeachingPoint":
+                fr = TeachingPoint.newInstance(mParam1, mParam2);
                 break;
         }
 

@@ -159,26 +159,34 @@ public class Liberal_arts extends Fragment {
             }
         });
 
-        // 스피너에 들어갈 텍스트
-        ArrayList<String> temp = new ArrayList<>();
-        temp.add("선택하세요");
-        switch (mParam2) {
-            case "2012":
-                temp.add("2012 KCC");
-            case "2013":
-                temp.add("2013 KCC");
-            case "2014":
-                temp.add("2014 KCC");
-            case "2015":
-                temp.add("2015 KCC");
-            default:
-                temp.add("교양과목");
-        }
-        menu = temp.toArray(new String[temp.size()]);
-
         // 검색 조건 필터 kcc/일반적인 교양
         spinner_kcc = (Spinner) view.findViewById(R.id.spinner_kcc);
-        if (mParam2.compareTo("2016") < 0) {
+
+        if (mParam2.compareTo("2016") < 0 || MainActivity.bTeachingCheck) {
+            // 스피너에 들어갈 텍스트
+            ArrayList<String> temp = new ArrayList<>();
+            temp.add("선택하세요");
+            switch (mParam2) {
+                case "2012":
+                    temp.add("2012 KCC");
+                case "2013":
+                    temp.add("2013 KCC");
+                case "2014":
+                    temp.add("2014 KCC");
+                case "2015":
+                    temp.add("2015 KCC");
+                default:
+                    temp.add("교양과목");
+            }
+
+            if (MainActivity.bTeachingCheck)
+                temp.add("교직과목");
+
+            menu = temp.toArray(new String[temp.size()]);
+
+            // 검색 조건 필터 kcc/일반적인 교양
+            //spinner_kcc = (Spinner) view.findViewById(R.id.spinner_kcc);
+            //if (mParam2.compareTo("2016") < 0) {
             adapterLiberalArts = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, menu);
             spinner_kcc.setAdapter(adapterLiberalArts);
             spinner_kcc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -187,15 +195,20 @@ public class Liberal_arts extends Fragment {
                     listLectures.clear();
                     listSearch.clear();
                     if (i > 0) {
-                        if (adapterLiberalArts.getCount() - 1 > i) {
-                            isKCC = true;
-                            char[] temp = mParam2.toCharArray();
-                            temp[temp.length - 1] += (i - 1);
-                            ConnectDB(String.copyValueOf(temp));
+                        //if (adapterLiberalArts.getCount() - 1 > i) {
+                        String[] temp = menu[i].split(" ");
+                        if (temp.length > 1) {
+                            if (temp[1].compareTo("KCC") == 0) {
+                                isKCC = true;
+                            }
                         } else {
                             isKCC = false;
-                            ConnectDB();
                         }
+                        ConnectDB(temp[0]);
+                        //} else {
+                        //isKCC = false;
+                        //ConnectDB();
+                        //}
                     }
 
                     if (i != 0) {
@@ -366,6 +379,8 @@ public class Liberal_arts extends Fragment {
 
         if (isKCC) {
             table = curriculumDB.getKCC(year);
+        } else if (year.equals("교직과목")){
+            table = curriculumDB.getTeachingCourse();
         } else {
             table = curriculumDB.SearchLecture("*", 300, CurriculumDB.LIBERAL_ARTS);
         }

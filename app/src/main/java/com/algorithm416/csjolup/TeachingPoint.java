@@ -7,6 +7,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import java.util.ArrayList;
 
 
 /**
@@ -28,6 +32,11 @@ public class TeachingPoint extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private CurriculumDB db;
+
+    private TextView teachingText[], teachingNum[];
+
 
     public TeachingPoint() {
         // Required empty public constructor
@@ -64,7 +73,25 @@ public class TeachingPoint extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_teaching, container, false);
+        View view = inflater.inflate(R.layout.fragment_teachingpoint, container, false);
+
+        db = new CurriculumDB(getContext());
+
+        teachingText = new TextView[3];
+        teachingNum = new TextView[3];
+
+        teachingText[0] = view.findViewById(R.id.TeachingText1);
+        teachingNum[0] = view.findViewById(R.id.TeachingNum1);
+
+        teachingText[1] = view.findViewById(R.id.TeachingText2);
+        teachingNum[1] = view.findViewById(R.id.TeachingNum2);
+
+        teachingText[2] = view.findViewById(R.id.TeachingText3);
+        teachingNum[2] = view.findViewById(R.id.TeachingNum3);
+
+        TeachingSort();
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -89,6 +116,78 @@ public class TeachingPoint extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public void TeachingSort() {
+        String table[][] = db.getTeachingCourse();
+        ArrayList<Lecture> list = Liberal_arts.getList();
+
+        int 이론 = 0, 소양 = 0, 실습 = 0;
+
+        if (!list.isEmpty()) {
+
+            int type = 0, num = 0, name = 0, credit = 0;
+
+            for (int i = 0; i < table.length; i++) {
+                switch (table[i][0]) {
+                    case "type":
+                        type = i;
+                        break;
+                    case "lecture_num":
+                        num = i;
+                        break;
+                    case "credit":
+                        credit = i;
+                        break;
+                }
+            }
+
+            for (int i = 1; i < table[0].length; i++) {
+                boolean bHit = false;
+                for (int j = 0; j < list.size(); j++) {
+                    Lecture lecture = list.get(j);
+                    if (table[num][i].compareTo(lecture.getLectureNum()) == 0) {
+                        switch (table[type][i]) {
+                            case "이론":
+                                bHit = true;
+                                이론 += Integer.parseInt(table[credit][i]);
+                                break;
+                            case "소양":
+                                bHit = true;
+                                소양 += Integer.parseInt(table[credit][i]);
+                                break;
+                            case "실습":
+                                bHit = true;
+                                실습 += Integer.parseInt(table[credit][i]);
+                                break;
+                        }
+                        if (bHit)
+                            break;
+                    }
+                }
+            }
+        }
+
+        table = db.getTeachingCourse(true);
+
+        int theory = 0, refinement = 0, practice = 0;
+        for (int i = 0; i < table.length; i++) {
+            switch (table[i][0]) {
+                case "theory":
+                    theory = Integer.parseInt(table[i][1]);
+                    break;
+                case "refinement":
+                    refinement = Integer.parseInt(table[i][1]);
+                    break;
+                case "practice":
+                    practice = Integer.parseInt(table[i][1]);
+                    break;
+            }
+        }
+
+        teachingNum[0].setText(이론 + " / " + theory);
+        teachingNum[1].setText(소양 + "/" + refinement);
+        teachingNum[2].setText(실습 + "/" + practice);
     }
 
     /**

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class SaveXML {
 
-    final private String filename = "CSJolup.dat" ;
+    final private String filename = "CSJolup" ;
 
     private Context context;
 

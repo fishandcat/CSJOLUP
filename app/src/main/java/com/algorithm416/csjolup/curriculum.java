@@ -102,10 +102,10 @@ public class curriculum extends Fragment {
         View view = inflater.inflate(R.layout.fragment_curriculum, container, false);
 
         Changefrag = (FrameLayout) view.findViewById(R.id.fragment);
-        CurriView = (RelativeLayout) view.findViewById(R.id.CurriView);
+        //CurriView = (RelativeLayout) view.findViewById(R.id.CurriView);
 
         Changefrag.setVisibility(View.VISIBLE);
-        CurriView.setVisibility(View.GONE);
+        //CurriView.setVisibility(View.GONE);
 
         pagerAdapter = new SectionsPagerAdapter(getFragmentManager(), mParam1, mParam2);
         pagerAdapter.insertItem("Major");
@@ -147,7 +147,7 @@ public class curriculum extends Fragment {
                 switch (view.getId()) {
                     case R.id.textView:
                         Changefrag.setVisibility(View.VISIBLE);
-                        CurriView.setVisibility(View.GONE);
+                        //CurriView.setVisibility(View.GONE);
                         break;
                 }
             }

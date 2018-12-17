@@ -77,6 +77,9 @@ public class Grades extends Fragment {
         pagerAdapter.insertItem("JolupPoint");
         pagerAdapter.insertItem("MajorPoint");
         pagerAdapter.insertItem("LecturePoint");
+
+        if (MainActivity.bTeachingCheck)
+            pagerAdapter.insertItem("TeachingPoint");
     }
 
     @Override
@@ -104,8 +107,14 @@ public class Grades extends Fragment {
             JolupPoint.pieEntries.add(new PieEntry(entry[k++], temp.get(i + 1)));
         }
 
-        final int graduate = Integer.parseInt(temp.get(temp.size() - 1));
+        int graduate = Integer.parseInt(temp.get(temp.size() - 1));
+
+        // 교직 수강시 학점 추가
+        if (MainActivity.bTeachingCheck)
+            graduate += 22;
+
         int sum = graduate - (entry[0] + entry[1] + entry[2]);
+
         if (sum > 0) {
             JolupPoint.pieEntries.add(new PieEntry(sum, "남은 학점"));
         }
