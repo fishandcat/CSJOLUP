@@ -24,12 +24,13 @@ public class Setting extends AppCompatActivity {
                 SaveXML xml = new SaveXML(this);
 
                 Intent intent = new Intent(mainActivity).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                xml.clear();
                 Major.getList().clear();
                 Liberal_arts.getList().clear();
                 for (int i = 0; i < JolupRequirements.selection.length; i++)
                     JolupRequirements.selection[i] = 0;
                 MainActivity.bBtnSave = false;
-                xml.clear();
+                MainActivity.bSaveLoad = false;
                 startActivity(intent);
                 finish();
                 break;

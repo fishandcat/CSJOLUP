@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -30,6 +31,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -60,7 +62,8 @@ public class MainActivity extends AppCompatActivity implements
         curriculum.OnFragmentInteractionListener,
         MajorPoint.OnFragmentInteractionListener,
         LecturePoint.OnFragmentInteractionListener,
-        JolupPoint.OnFragmentInteractionListener
+        JolupPoint.OnFragmentInteractionListener,
+        TeachingPoint.OnFragmentInteractionListener
 {
 
     private ArrayAdapter<CharSequence> adMajorSpin, adCurriculumSpin;   // 스피너 어뎁터
@@ -81,7 +84,8 @@ public class MainActivity extends AppCompatActivity implements
     private boolean spinerCheck1 = false;
     private boolean spinerCheck2 = false;
     static public boolean bBtnSave = false;
-    static public boolean TeachingCheck = false;
+    static public boolean bSaveLoad = false;
+    static public boolean bTeachingCheck = false;
 
     private Intent settingintent;               // 세팅 엑티비티 인텐트
 
@@ -138,6 +142,12 @@ public class MainActivity extends AppCompatActivity implements
         myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
 
         checkBox = (CheckBox) findViewById(R.id.TeachingCheck);
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                bTeachingCheck = b;
+            }
+        });
 
         sp = getSharedPreferences("savefile", MODE_PRIVATE);
         editor = sp.edit();
@@ -231,7 +241,9 @@ public class MainActivity extends AppCompatActivity implements
         SaveXML xml = new SaveXML(this);
         temp = xml.getData("CurriculumYear");
 
-        if (temp != null) {
+        if (temp != null && !bSaveLoad) {
+            bSaveLoad = true;
+            bBtnSave = true;
             SaveMajor = temp.get(0);
             SaveCurriculum = temp.get(1);
             spinerCheck1 = spinerCheck2 = true;
@@ -255,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements
                 nJolupRequirement[i] = Integer.parseInt(temp.get(i));
             }
 
-            bBtnSave = true;
+
             ScreenView.setVisibility(View.GONE);
             DrLay.setVisibility(View.VISIBLE);
             Toast.makeText(MainActivity.this, "불러오기 완료!", Toast.LENGTH_SHORT).show();
@@ -268,11 +280,9 @@ public class MainActivity extends AppCompatActivity implements
                     .replace(R.id.Fragment, currfragment).commit();
         }
 
-        // 툴바 메뉴추가
+        // 툴바 메뉴 추가
         setSupportActionBar(myToolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
     }
 
     @Override
@@ -311,14 +321,14 @@ public class MainActivity extends AppCompatActivity implements
                     ScreenView.setVisibility(View.GONE);
                     DrLay.setVisibility(View.VISIBLE);
                     Toast.makeText(MainActivity.this, "저장완료!", Toast.LENGTH_SHORT).show();
-                    if(checkBox.isChecked()) {
-                        TeachingCheck = true;
-                        checkBox.setChecked(true);
-                    }
-                    else{
-                        TeachingCheck = false;
-                        checkBox.setChecked(false);
-                    }
+//                    if(checkBox.isChecked()) {
+//                        bTeachingCheck = true;
+//                        checkBox.setChecked(true);
+//                    }
+//                    else{
+//                        bTeachingCheck = false;
+//                        checkBox.setChecked(false);
+//                    }
                     MajorText.setText(SaveMajor);
                     CurriculumText.setText(SaveCurriculum + " 교육과정");
                     currfragment = curriculum.newInstance(SaveMajor,SaveCurriculum);
@@ -380,11 +390,6 @@ public class MainActivity extends AppCompatActivity implements
                 }
                 break;
         }
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri){
-
     }
 
     private ArrayList<Lecture> ConnectDB(String year, String tag,ArrayList<String> saveString){
@@ -495,22 +500,27 @@ public class MainActivity extends AppCompatActivity implements
         return list;
     }
 
-    @Override
-    protected void onPause() {
+    public void onSave() {
         SaveXML xml = new SaveXML(this);
 
-        xml.clear();
-
-        if (!SaveMajor.isEmpty() && !SaveCurriculum.isEmpty() && bBtnSave) {
+        if (bBtnSave) {
+            xml.clear();
             String[] CurriculumYear = new String[2];
             CurriculumYear[0] = SaveMajor;
             CurriculumYear[1] = SaveCurriculum;
 
             xml.saveData("CurriculumYear", CurriculumYear);
+            //xml.saveData("Teaching", )
             xml.saveData("Major", Major.getList());
             xml.saveData("Liberal_Arts", Liberal_arts.getList());
             xml.saveData("JolupRequirements", JolupRequirements.selection);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        onSave();
+
         super.onPause();
     }
 
@@ -526,10 +536,25 @@ public class MainActivity extends AppCompatActivity implements
                     m_close_handler.sendEmptyMessageDelayed(0, 500);
                     return false;
                 } else {
+                    onSave();
+
+                    Major.getList().clear();
+                    Liberal_arts.getList().clear();
+                    for (int i = 0; i < JolupRequirements.selection.length; i++)
+                        JolupRequirements.selection[i] = 0;
+
+                    bSaveLoad = false;
+                    bBtnSave = false;
+
                     finish();
                 }
             }
         }
         return super.onKeyUp(keyCode, event);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri){
+
     }
 }

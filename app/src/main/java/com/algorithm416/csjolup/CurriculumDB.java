@@ -265,6 +265,28 @@ public class CurriculumDB extends SQLiteOpenHelper {
         return table;
     }
 
+    // 교직 관련 전공 과목 반환
+    public String[][] getTeachingCourse(String major)
+    {
+        if (myDataBase == null)
+            openDatabase();
+        else if (!myDataBase.isOpen())
+            openDatabase();
+
+        Cursor result = null;
+
+        switch (major)
+        {
+            case "cs":
+                result = myDataBase.rawQuery("SELECT * FROM teaching_course_" + major + "JOIN lecture_" + major + "USING (lecture_num)", null);
+                break;
+        }
+
+        String[][] table = getTable(result);
+
+        close();
+        return table;
+    }
     // 교직과정별 과목 반환 이론, 실습, 소양 순서로 반환됨
     public String[][] getTeachingCourse() {
         return getTeachingCourse(false);
@@ -284,8 +306,8 @@ public class CurriculumDB extends SQLiteOpenHelper {
             openDatabase();
 
         Cursor result = isMinCredits ?
-                myDataBase.rawQuery("SELECT * FROM teaching_course JOIN liberal_arts USING (lecture_num) ORDER BY type DESC", null) :
-                myDataBase.rawQuery("SELECT * FROM teaching_course_credit", null);
+                myDataBase.rawQuery("SELECT * FROM teaching_course_credit", null) :
+                myDataBase.rawQuery("SELECT * FROM teaching_course JOIN liberal_arts USING (lecture_num) ORDER BY type DESC", null);
 
         String[][] table = getTable(result);
 

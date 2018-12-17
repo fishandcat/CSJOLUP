@@ -3,13 +3,11 @@ package com.algorithm416.csjolup;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -296,9 +294,9 @@ public class MajorPoint extends Fragment {
             case "2014":
                 꿈미래텍스트.setText(JolupRequirements.selection[4] + " /  3");
                 break;
-                default:
-                    꿈미래텍스트.setText(JolupRequirements.selection[4] +" /  4");
-                    break;
+            default:
+                꿈미래텍스트.setText(JolupRequirements.selection[4] +" /  4");
+                break;
         }
     }
 
