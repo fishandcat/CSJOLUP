@@ -21,56 +21,102 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="150dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_centerInParent="true"
+                android:background="#87CEFA"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:orientation="horizontal">
 
+                <View
+                    android:layout_width="3dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:background="#87CEFA"/>
+
                 <TextView
                     android:id="@+id/major"
-                    android:layout_width="150dp"
-                    android:layout_height="30dp"
-                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="30sp"
+                    android:layout_weight="1.5"
                     android:gravity="end"
                     android:text="학과 : "
                     android:textSize="20sp" />
 
                 <Spinner
                     android:id="@+id/majorspinner"
-                    android:layout_width="300dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:entries="@array/major_names"
                     app:layout_constraintBottom_toTopOf="@+id/curriculumspinner" />
+
+                <View
+                    android:layout_width="3dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:background="#87CEFA"/>
+
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_centerInParent="true"
+                android:background="#87CEFA"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:orientation="horizontal">
 
+                <View
+                    android:layout_width="3dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:background="#87CEFA"/>
+
                 <TextView
                     android:id="@+id/curriculum"
-                    android:layout_width="150dp"
-                    android:layout_height="30dp"
-                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="30sp"
+                    android:layout_weight="1.5"
                     android:gravity="end"
                     android:text="교육과정 : "
                     android:textSize="20sp" />
 
                 <Spinner
                     android:id="@+id/curriculumspinner"
-                    android:layout_width="300dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:entries="@array/stu_num" />
+
+                <View
+                    android:layout_width="3dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:background="#87CEFA"/>
+
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_centerInParent="true"
+                android:background="#87CEFA"/>
 
             <Space
                 android:layout_width="match_parent"

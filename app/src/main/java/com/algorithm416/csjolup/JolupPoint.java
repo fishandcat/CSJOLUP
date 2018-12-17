@@ -1,30 +1,37 @@
 package com.algorithm416.csjolup;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Grades.OnFragmentInteractionListener} interface
+ * {@link JolupPoint.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link Grades#newInstance} factory method to
+ * Use the {@link JolupPoint#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Grades extends Fragment {
+public class JolupPoint extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -36,11 +43,18 @@ public class Grades extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private SectionsPagerAdapter pagerAdapter;
+    private String MinJopup;
 
-    private ViewPager viewPager;
+    private TextView TextJolup;
 
-    public Grades() {
+    private ArrayList<Lecture> ArList;
+
+    private CurriculumDB db;
+
+    public static List<PieEntry> pieEntries = new ArrayList<>();
+    public static PieChart pieChart;
+
+    public JolupPoint() {
         // Required empty public constructor
     }
 
@@ -50,11 +64,11 @@ public class Grades extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Grades.
+     * @return A new instance of fragment JolupPoint.
      */
     // TODO: Rename and change types and number of parameters
-    public static Grades newInstance(String param1, String param2) {
-        Grades fragment = new Grades();
+    public static JolupPoint newInstance(String param1, String param2) {
+        JolupPoint fragment = new JolupPoint();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -70,48 +84,43 @@ public class Grades extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        pagerAdapter = new SectionsPagerAdapter(getFragmentManager(), mParam1, mParam2);
+        db = new CurriculumDB(getContext());
 
-        pagerAdapter.insertItem("JolupPoint");
-        pagerAdapter.insertItem("MajorPoint");
-        pagerAdapter.insertItem("LecturePoint");
+        ConnectDB(mParam2);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_jolup_point, container, false);
 
-        View view = inflater.inflate(R.layout.fragment_grades, container, false);
+        PieDataSet pieDataSet = new PieDataSet(pieEntries,"이수 대상");
+        pieDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+        pieDataSet.setValueTextSize(25);
+        pieDataSet.setValueTextColor(Color.WHITE);
+        pieDataSet.setSliceSpace(3f);
 
-        viewPager = (ViewPager) view.findViewById(R.id.GradesPager);
+        PieData pieData = new PieData(pieDataSet);
 
-        ArrayList<String> temp = new ArrayList<>();
-        MajorPoint mp = new MajorPoint();
-        mp.Majorpointsum();
-        LecturePoint lp = new LecturePoint();
-        lp.Lecturepointsum(mParam2);
-
-        temp.addAll(mp.getPoints());
-        temp.addAll(lp.getPoints(mParam2, getContext()));
-
-        JolupPoint.pieEntries.clear();
-        int entry[] = new int[3];
-        for (int i = 0, k = 0; i < temp.size() - 1; i += 2) {
-            entry[k] = Integer.parseInt(temp.get(i));
-            JolupPoint.pieEntries.add(new PieEntry(entry[k++], temp.get(i + 1)));
+        pieChart = (PieChart) view.findViewById(R.id.PieChart);
+        pieChart.setData(pieData);
+        pieChart.setCenterTextSize(25);
+        pieChart.setCenterTextColor(Color.DKGRAY);
+        pieChart.getDescription().setEnabled(false);
+        pieChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        pieChart.getLegend().setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        pieChart.getLegend().setOrientation(Legend.LegendOrientation.VERTICAL);
+        pieChart.getLegend().setTextSize(18);
+        pieChart.setEntryLabelTextSize(18);
+        if (mParam2.compareTo("2016") < 0) {
+            pieChart.setCenterText(mParam2 + "년 교육과정\n졸업 학점 : " + db.GetMinCredits(mParam2)[14][1]);
+        } else {
+            pieChart.setCenterText(mParam2 + "년 교육과정\n졸업 학점 : " + db.GetMinCredits(mParam2)[8][1]);
         }
 
-        final int graduate = Integer.parseInt(temp.get(temp.size() - 1));
-        int sum = graduate - (entry[0] + entry[1] + entry[2]);
-        if (sum > 0) {
-            JolupPoint.pieEntries.add(new PieEntry(sum, "남은 학점"));
-        }
-
-        viewPager.setAdapter(pagerAdapter);
-        viewPager.setOffscreenPageLimit(2);
-        viewPager.setCurrentItem(0);
-
+        pieChart.invalidate();
         return view;
     }
 
@@ -128,7 +137,8 @@ public class Grades extends Fragment {
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
         }
     }
 
@@ -152,4 +162,24 @@ public class Grades extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+    private void ConnectDB(String year) {
+
+        String[][] table = db.GetMinCredits(year);
+        switch (year)
+        {
+            case "2012":
+            case "2013":
+            case "2014":
+            case "2015":
+                MinJopup = table[14][1];
+                break;
+            case "2016":
+            case "2017":
+            case "2018":
+                MinJopup = table[8][1];
+                break;
+        }
+    }
+
 }

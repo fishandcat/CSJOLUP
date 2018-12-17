@@ -9,7 +9,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:overScrollMode="ifContentScrolls">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
         <Space
             android:layout_width="match_parent"
@@ -90,6 +100,27 @@
                 android:layout_height="45dp" />
 
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="꿈/미래개척"
+                android:textSize="10pt" />
+
+            <Spinner
+                android:id="@+id/Jolupsp5"
+                android:layout_width="match_parent"
+                android:layout_height="45dp" />
+
+        </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 
 </FrameLayout>

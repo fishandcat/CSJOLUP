@@ -18,14 +18,14 @@
     </string-array>
 
     <string-array name="jolup1">
-        <item>""</item>
+        <item>"선택해주세요"</item>
         <item>사회봉사30시간이상</item>
         <item>헌혈 총 3회 이상</item>
         <item>총장인정 1학기이상 교내봉사</item>
     </string-array>
 
     <string-array name="jolup2">
-        <item>""</item>
+        <item>"선택해주세요"</item>
         <item>해외현장체험 참가</item>
         <item>global pioneer program 참가</item>
         <item>해외단기 교환 프로그램</item>
@@ -34,7 +34,7 @@
     </string-array>
 
     <string-array name="jolup3">
-        <item>""</item>
+        <item>"선택해주세요"</item>
         <item>1권</item>
         <item>2권</item>
         <item>3권</item>
@@ -45,9 +45,17 @@
     </string-array>
 
     <string-array name="jolup4">
-        <item>""</item>
+        <item>"선택해주세요"</item>
         <item>GNU인성 이수</item>
         <item>GNU인성 교육프로그램 이수</item>
+    </string-array>
+
+    <string-array name="jolup5">
+        <item>"선택해주세요"</item>
+        <item>"1회"</item>
+        <item>"2회"</item>
+        <item>"3회"</item>
+        <item>"4회"</item>
     </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->

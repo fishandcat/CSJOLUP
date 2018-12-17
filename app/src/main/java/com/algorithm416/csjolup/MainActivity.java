@@ -1,10 +1,15 @@
 package com.algorithm416.csjolup;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ScaleDrawable;
+import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -16,11 +21,13 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.graphics.drawable.DrawerArrowDrawable;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewParent;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
@@ -30,9 +37,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.time.Instant;
+import java.util.ArrayList;
 
 /*
-*   내일할일
+*   TODO: 내일할일
 *
 *   설정 엑티비티 구성하기 (학점관리 학점 텍스트로 표시, 그래프 표시 설정, 초기화 버튼 구현)
 *   엑션바에 메뉴 토글 구현하기
@@ -43,7 +51,16 @@ import java.time.Instant;
 *
 * */
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements
+        Major.OnFragmentInteractionListener,
+        Liberal_arts.OnFragmentInteractionListener,
+        JolupRequirements.OnFragmentInteractionListener,
+        Grades.OnFragmentInteractionListener,
+        curriculum.OnFragmentInteractionListener,
+        MajorPoint.OnFragmentInteractionListener,
+        LecturePoint.OnFragmentInteractionListener,
+        JolupPoint.OnFragmentInteractionListener
+{
 
     private ArrayAdapter<CharSequence> adMajorSpin, adCurriculumSpin;   // 스피너 어뎁터
     private ArrayAdapter<String> adDraList;                             // 드로우 리스트 어뎁터
@@ -57,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean spinerCheck1 = false;
     private boolean spinerCheck2 = false;
+    static public boolean bBtnSave = false;
 
     private Intent settingintent;               // 세팅 엑티비티 인텐트
 
@@ -66,11 +84,17 @@ public class MainActivity extends AppCompatActivity {
     private FrameLayout FragmentLayout;         // 프레그먼트 변경 레이아웃
     private View Heder;                         // 네비게이션 헤더 뷰
 
+    private SharedPreferences sp;
+    private SharedPreferences.Editor editor;
+
     private curriculum currfragment;            // 커리큘럼 프래그먼트
     private Grades grades;                      // 학점관리 프래그먼트
 
     private TextView MajorText;                 // 전공 텍스트
     private TextView CurriculumText;            // 교육과정 텍스트
+
+    private Handler m_close_handler;
+    private boolean m_close_flag = false;
 
     public MainActivity() {
     }
@@ -80,11 +104,18 @@ public class MainActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
 
+        m_close_handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                if(msg.what == 0) {
+                    m_close_flag = false;
+                }
+                super.handleMessage(msg);
+            }
+        };
+
         MajorSpin = (Spinner) findViewById(R.id.majorspinner);
         CurriculumSpin = (Spinner) findViewById(R.id.curriculumspinner);
-
-        currfragment = curriculum.newInstance(SaveMajor,SaveCurriculum);
-        grades = Grades.newInstance(SaveMajor, SaveCurriculum);
 
         ScreenView = (ConstraintLayout) findViewById(R.id.screenView);
         DrLay = (DrawerLayout) findViewById(R.id.DrawListView);
@@ -96,6 +127,10 @@ public class MainActivity extends AppCompatActivity {
 
         MajorText = (TextView) Heder.findViewById(R.id.majortext);
         CurriculumText = (TextView) Heder.findViewById(R.id.curriculumtext);
+
+        sp = getSharedPreferences("savefile", MODE_PRIVATE);
+        editor = sp.edit();
+
 
         DrLay.setVisibility(View.GONE);
 
@@ -109,14 +144,16 @@ public class MainActivity extends AppCompatActivity {
                 switch (position) {
                     case 1:
                         Toast.makeText(MainActivity.this, "졸업관리", Toast.LENGTH_SHORT).show();
-                        currfragment.CurriView.setVisibility(View.VISIBLE);
-                        currfragment.Changefrag.setVisibility(View.GONE);
+                        currfragment = curriculum.newInstance(SaveMajor,SaveCurriculum);
+                        //currfragment.CurriView.setVisibility(View.VISIBLE);
+                        //currfragment.Changefrag.setVisibility(View.GONE);
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.Fragment, currfragment).commit();
                         break;
                     case 2:
                         Toast.makeText(MainActivity.this, "학점관리", Toast.LENGTH_SHORT).show();
+                        grades =  Grades.newInstance(SaveMajor,SaveCurriculum);
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.Fragment, grades).commit();
@@ -184,6 +221,48 @@ public class MainActivity extends AppCompatActivity {
                 spinerCheck2 = false;
             }
         });
+
+        // 저장된 걸 불러오는 기능
+        ArrayList<String> temp;
+        SaveXML xml = new SaveXML(this);
+        temp = xml.getData("CurriculumYear");
+
+        if (temp != null) {
+            SaveMajor = temp.get(0);
+            SaveCurriculum = temp.get(1);
+            spinerCheck1 = spinerCheck2 = true;
+
+            ArrayList<Lecture> forReplace;
+            ArrayList<Lecture> list = Major.getList();
+            temp = xml.getData("Major");
+            forReplace = ConnectDB(SaveCurriculum, "Major", temp);
+            list.addAll(forReplace);
+
+
+            list = Liberal_arts.getList();
+            temp = xml.getData("Liberal_Arts");
+            forReplace = ConnectDB(SaveCurriculum, "Liberal_Arts", temp);
+            list.addAll(forReplace);
+
+            int []nJolupRequirement = JolupRequirements.selection;
+            temp = xml.getData("JolupRequirements");
+
+            for (int i = 0; i < temp.size(); i++) {
+                nJolupRequirement[i] = Integer.parseInt(temp.get(i));
+            }
+
+
+            ScreenView.setVisibility(View.GONE);
+            DrLay.setVisibility(View.VISIBLE);
+            Toast.makeText(MainActivity.this, "불러오기 완료!", Toast.LENGTH_SHORT).show();
+            MajorText.setText(SaveMajor);
+            CurriculumText.setText(SaveCurriculum + " 교육과정");
+            currfragment = curriculum.newInstance(SaveMajor,SaveCurriculum);
+            grades = Grades.newInstance(SaveMajor,SaveCurriculum);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.Fragment, currfragment).commit();
+        }
     }
 
     @Override
@@ -198,6 +277,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()){
 
             case R.id.action_setting:
+                settingintent.putExtra("MainActivity", this.getIntent());
                 startActivity(settingintent);
                 return true;
             default:
@@ -216,6 +296,8 @@ public class MainActivity extends AppCompatActivity {
                     MajorText.setText(SaveMajor);
                     CurriculumText.setText(SaveCurriculum + " 교육과정");
                     currfragment = curriculum.newInstance(SaveMajor,SaveCurriculum);
+                    grades = Grades.newInstance(SaveMajor,SaveCurriculum);
+                    bBtnSave = true;
                     getSupportFragmentManager()
                             .beginTransaction()
                             .replace(R.id.Fragment, currfragment).commit();
@@ -275,6 +357,154 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onFragmentInteraction(Uri uri){
 
+    }
 
+    private ArrayList<Lecture> ConnectDB(String year, String tag,ArrayList<String> saveString){
+        CurriculumDB db = new CurriculumDB(this);
+        String[][] table;
+
+        ArrayList<Lecture> list = new ArrayList<>();
+
+        if (tag.equals("Major")) { // 전공 부분
+            table = db.getMajor(year);
+
+            int grade = 0, type = 0, num = 0, name = 0, credit = 0, exist = 0;
+
+            int grade_count = 0;
+            for (int i = 0; i < table.length; i++) {
+                switch (table[i][0]) {
+                    case "lecture_type":
+                        type = i;
+                        break;
+                    case "lecture_num":
+                        num = i;
+                        break;
+                    case "lecture_name":
+                        name = i;
+                        break;
+                    case "credit":
+                        credit = i;
+                        break;
+                    case "grade":
+                        grade = i;
+                        break;
+                    case "is_exist":
+                        exist = i;
+                }
+            }
+
+            for (int i = 1; i < table[0].length; i++) {
+                if (grade_count != Integer.parseInt(table[grade][i])) {
+                    grade_count = Integer.parseInt(table[grade][i]);
+                    int temp = grade_count % 10;
+                    String str = String.valueOf(grade_count / 10) + "학년 " + (temp % 2 != 0 ? String.valueOf(temp / 3 + 1) + "학기" : (temp / 2 == 1 ? "하계" : "동계"));
+                    list.add(new Lecture(str));
+                }
+
+                if (table[exist][i].equals("N"))
+                    list.add(new Lecture(table[grade][i], table[type][i] + " (사라짐)", table[num][i], table[name][i], table[credit][i]));
+                else
+                    list.add(new Lecture(table[grade][i], table[type][i], table[num][i], table[name][i], table[credit][i]));
+
+                for (int j = 0; j < saveString.size(); j++) {
+                    if (table[num][i].equals(saveString.get(j))) {
+                        list.get(list.size() - 1).setItemCheck(true);
+                        break;
+                    }
+                }
+            }
+
+        } else { // 교양부분
+
+            for (int k = Integer.parseInt(year); k < Integer.parseInt("2018"); k++) {
+                switch (Integer.toString(k)) {
+                    case "2012":
+                    case "2013":
+                    case "2014":
+                    case "2015":
+                        table = db.getKCC(year);
+                        break;
+                    default:
+                        table = db.SearchLecture("*", 300, CurriculumDB.LIBERAL_ARTS);
+                        break;
+                }
+
+                int type = 0, num = 0, name = 0, credit = 0;
+
+                for (int i = 0; i < table.length; i++) {
+                    switch (table[i][0]) {
+                        case "lecture_type":
+                            type = i;
+                            break;
+                        case "lecture_num":
+                            num = i;
+                            break;
+                        case "lecture_name":
+                            name = i;
+                            break;
+                        case "credit":
+                            credit = i;
+                            break;
+                    }
+                }
+                if (saveString.size() > 0) {
+                    for (int i = 1; i < table[0].length; i++) {
+                        for (int j = 0; j < saveString.size(); j++) {
+                            if (table[num][i].equals(saveString.get(j))) {
+                                list.add(new Lecture("", table[type][i], table[num][i], table[name][i], table[credit][i]));
+                                list.get(list.size() - 1).setItemCheck(true);
+                                saveString.remove(j);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+        db.close();
+
+        return list;
+    }
+
+    @Override
+    protected void onPause() {
+        SaveXML xml = new SaveXML(this);
+
+        xml.clear();
+
+        if (!SaveMajor.isEmpty() && !SaveCurriculum.isEmpty() && bBtnSave) {
+            String[] CurriculumYear = new String[2];
+            CurriculumYear[0] = SaveMajor;
+            CurriculumYear[1] = SaveCurriculum;
+
+            xml.saveData("CurriculumYear", CurriculumYear);
+            xml.saveData("Major", Major.getList());
+            xml.saveData("Liberal_Arts", Liberal_arts.getList());
+            xml.saveData("JolupRequirements", JolupRequirements.selection);
+        }
+        super.onPause();
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if(event.getKeyCode()==KeyEvent.KEYCODE_MENU) {
+            return super.onKeyUp(keyCode, event);
+        } else {
+            if(event.getKeyCode()==KeyEvent.KEYCODE_BACK) {
+                if(!m_close_flag) {
+                    Toast.makeText(this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+                    m_close_flag = true;
+                    m_close_handler.sendEmptyMessageDelayed(0, 500);
+                    return false;
+                } else {
+                    finish();
+                }
+            }
+        }
+        return super.onKeyUp(keyCode, event);
+    }
 }
