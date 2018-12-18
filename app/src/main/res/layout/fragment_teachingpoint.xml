@@ -7,121 +7,159 @@
     tools:context=".TeachingPoint">
 
     <LinearLayout
-        android:id="@+id/TeachingLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="visible">
+        android:orientation="vertical">
 
-        <View
-            android:id="@+id/TeachingCrackView1"
+        <Space
             android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:layout_centerInParent="true"
-            android:background="#87CEFA" />
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
         <LinearLayout
-            android:id="@+id/TeachingMainLayout1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:orientation="horizontal"
+            android:padding="20dp">
 
-            <TextView
-                android:id="@+id/TeachingText1"
+            <View
+                android:layout_width="3dp"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:background="#87CEFA" />
+
+            <LinearLayout
+                android:id="@+id/TeachingLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center|end"
-                android:text="교직 이론 : "
-                android:textSize="20sp" />
+                android:layout_weight="0.3"
+                android:orientation="vertical"
+                android:visibility="visible">
 
-            <TextView
-                android:id="@+id/TeachingNum1"
-                android:layout_width="match_parent"
+
+                <View
+                    android:id="@+id/TeachingCrackView1"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:background="#87CEFA" />
+
+                <LinearLayout
+                    android:id="@+id/TeachingMainLayout1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/TeachingText1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="교직 이론 : "
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/TeachingNum1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/TeachingCrackView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:layout_centerInParent="true"
+                    android:background="#87CEFA" />
+
+                <LinearLayout
+                    android:id="@+id/TeachingMainLayout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/TeachingText2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="교직 소양 : "
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/TeachingNum2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/TeachingCrackView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:layout_centerInParent="true"
+                    android:background="#87CEFA" />
+
+                <LinearLayout
+                    android:id="@+id/TeachingMainLayout3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/TeachingText3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="교직 실습 : "
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/TeachingNum3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textSize="20sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/TeachingCrackView4"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:layout_centerInParent="true"
+                    android:background="#87CEFA" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="3dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center|start"
-                android:text="0"
-                android:textSize="20sp" />
+                android:layout_centerInParent="true"
+                android:background="#87CEFA" />
 
         </LinearLayout>
 
-        <View
-            android:id="@+id/TeachingCrackView2"
+        <Space
             android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:layout_centerInParent="true"
-            android:background="#87CEFA" />
-
-        <LinearLayout
-            android:id="@+id/TeachingMainLayout2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/TeachingText2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center|end"
-                android:text="교직 소양 : "
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/TeachingNum2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center|start"
-                android:text="0"
-                android:textSize="20sp" />
-
-        </LinearLayout>
-
-        <View
-        android:id="@+id/TeachingCrackView3"
-        android:layout_width="match_parent"
-        android:layout_height="3dp"
-        android:layout_centerInParent="true"
-        android:background="#87CEFA" />
-
-        <LinearLayout
-            android:id="@+id/TeachingMainLayout3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/TeachingText3"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center|end"
-                android:text="교직 실습 : "
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/TeachingNum3"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center|start"
-                android:text="0"
-                android:textSize="20sp" />
-
-        </LinearLayout>
-
-        <View
-            android:id="@+id/TeachingCrackView4"
-            android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:layout_centerInParent="true"
-            android:background="#87CEFA" />
-
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
     </LinearLayout>
 
 </FrameLayout>
