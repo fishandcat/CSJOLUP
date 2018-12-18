@@ -31,6 +31,7 @@ public class Setting extends AppCompatActivity {
                     JolupRequirements.selection[i] = 0;
                 MainActivity.bBtnSave = false;
                 MainActivity.bSaveLoad = false;
+                MainActivity.bTeachingCheck = false;
                 startActivity(intent);
                 finish();
                 break;
