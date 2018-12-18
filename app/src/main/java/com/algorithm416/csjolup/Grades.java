@@ -73,13 +73,6 @@ public class Grades extends Fragment {
         }
 
         pagerAdapter = new SectionsPagerAdapter(getFragmentManager(), mParam1, mParam2);
-
-        pagerAdapter.insertItem("JolupPoint");
-        pagerAdapter.insertItem("MajorPoint");
-        pagerAdapter.insertItem("LecturePoint");
-
-        if (MainActivity.bTeachingCheck)
-            pagerAdapter.insertItem("TeachingPoint");
     }
 
     @Override
@@ -88,6 +81,14 @@ public class Grades extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.fragment_grades, container, false);
+
+        pagerAdapter.clear();
+        pagerAdapter.insertItem("JolupPoint");
+        pagerAdapter.insertItem("MajorPoint");
+        pagerAdapter.insertItem("LecturePoint");
+
+        if (MainActivity.bTeachingCheck)
+            pagerAdapter.insertItem("TeachingPoint");
 
         viewPager = (ViewPager) view.findViewById(R.id.GradesPager);
 

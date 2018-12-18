@@ -89,6 +89,19 @@ public class SaveXML {
         editor.apply();
     }
 
+    public void saveData(String tag, boolean bValue) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append(bValue);
+
+        SharedPreferences pref = context.getSharedPreferences(filename, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+
+        editor.putString(tag, stringBuilder.toString());
+        //editor.commit(); 대신 apply 로
+        editor.apply();
+    }
+
     public void clear() {
         SharedPreferences pref = context.getSharedPreferences(filename, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();

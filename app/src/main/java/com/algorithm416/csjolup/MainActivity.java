@@ -254,6 +254,9 @@ public class MainActivity extends AppCompatActivity implements
             forReplace = ConnectDB(SaveCurriculum, "Major", temp);
             list.addAll(forReplace);
 
+            temp = xml.getData("Teaching");
+            if (temp != null)
+                bTeachingCheck = Boolean.parseBoolean(temp.get(0));
 
             list = Liberal_arts.getList();
             temp = xml.getData("Liberal_Arts");
@@ -513,7 +516,7 @@ public class MainActivity extends AppCompatActivity implements
             CurriculumYear[1] = SaveCurriculum;
 
             xml.saveData("CurriculumYear", CurriculumYear);
-            //xml.saveData("Teaching", )
+            xml.saveData("Teaching", bTeachingCheck);
             xml.saveData("Major", Major.getList());
             xml.saveData("Liberal_Arts", Liberal_arts.getList());
             xml.saveData("JolupRequirements", JolupRequirements.selection);

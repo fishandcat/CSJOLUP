@@ -27,6 +27,10 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
         fragmentList.add(i, fragment_name);
     }
 
+    public void clear() {
+        fragmentList.clear();
+    }
+
     @Override
     public Fragment getItem(int position) {
         Fragment fr = null;
